@@ -9,6 +9,9 @@
 This repository contains code for producing monthly modelled estimates
 of annual births for local authorities in England.
 
+Outputs from this process are published on the London Datastore
+[here](https://data.london.gov.uk/dataset/modelled-estimates-of-recent-births)
+
 Modelled birth estimates are based on the number of persons age 0
 present on the patient register - data that is published monthly and
 with a lag of just 1-2 weeks. Official birth estimates from ONS are
