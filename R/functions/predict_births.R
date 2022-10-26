@@ -1,3 +1,5 @@
+library(dplyr)
+
 predict_births <- function(birth_gp_coeff, gp_0) {
 
   coeffs <- birth_gp_coeff %>%

@@ -1,3 +1,5 @@
+library(dplyr)
+
 calc_birth_gp_coefficients <- function(births_actual, gp_0, date_start, date_end){
 
   births_gp0 <- inner_join(births_actual, gp_0,

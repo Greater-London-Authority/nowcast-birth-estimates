@@ -1,4 +1,4 @@
-library(tidyverse)
+library(dplyr)
 source("R/functions/aggregate_to_region.R")
 
 fpath <- list(lookup_lad_rgn = "lookups/lookup_lad_rgn.rds",
@@ -8,6 +8,7 @@ fpath <- list(lookup_lad_rgn = "lookups/lookup_lad_rgn.rds",
               births_actual = "data/processed/births_actual.rds")
 
 births_lad <- readRDS(fpath$births_lad) %>%
+  filter(grepl("E0", gss_code)) %>%
   mutate(geography = "LAD21") %>%
   mutate(sort_order = 3) %>%
   select(gss_code, gss_name, geography, measure, date = year_ending_date, sex, value, sort_order)
