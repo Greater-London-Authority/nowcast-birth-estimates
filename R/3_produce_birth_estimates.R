@@ -8,7 +8,9 @@ fpath <- list(births_actual = "data/processed/births_actual.rds",
               gp_0 = "data/processed/gp_age_0.rds",
               births_predicted = "outputs/births_predicted.csv",
               birth_gp_coeff = "outputs/birth_gp_coefficients.csv",
-              births_all = "outputs/births_all.csv",
+              births_all = "data/processed/births_all.rds",
+              actual_and_predicted_births = "outputs/actual_and_predicted_births.csv",
+              actual_and_predicted_births_wide = "outputs/actual_and_predicted_births_wide.csv",
               births_predicted_wide = "outputs/predicted_births_wide.csv",
               births_actual_wide = "outputs/actual_births_wide.csv")
 
@@ -21,24 +23,36 @@ date_end <- ""
 #-----
 
 births_actual <- readRDS(fpath$births_actual) %>%
-  select(-sex)
+  rename(annual_births = value) %>%
+  select(-measure)
 
 gp_0 <- readRDS(fpath$gp_0) %>%
-  rename(gp_count = value)
+  rename(gp_count = value) %>%
+  select(-measure)
 
 birth_gp_coeff <- calc_birth_gp_coefficients(births_actual, gp_0, date_start, date_end)
 
 births_predicted <- predict_births(birth_gp_coeff, gp_0) %>%
-  rename(year_ending_date = date, annual_births = births)
+  rename(year_ending_date = date)
 
 births_all <- bind_rows(
   births_actual %>%
-    mutate(ci_lower = births, ci_upper = births, type = "actual") %>%
-    rename(year_ending_date = date, annual_births = births),
+    mutate(ci_lower = annual_births, ci_upper = annual_births, type = "actual") %>%
+    rename(year_ending_date = date),
   births_predicted %>%
     mutate(type = "predicted")
-) %>%
-  arrange(gss_code, type, year_ending_date)
+)
+
+actual_and_predicted_births <- births_predicted %>%
+  rename(predicted_births = annual_births) %>%
+  left_join(rename(births_actual, year_ending_date = date), by = NULL) %>%
+  rename(actual_births = annual_births)
+
+actual_and_predicted_births_wide <- actual_and_predicted_births %>%
+  pivot_longer(cols = c("predicted_births", "actual_births", "ci_lower", "ci_upper"),
+               names_to = "measure", values_to = "value") %>%
+  pivot_wider(names_from = "year_ending_date",
+              values_from = "value")
 
 births_predicted_wide <- births_all %>%
   filter(type == "predicted") %>%
@@ -54,8 +68,10 @@ births_actual_wide <- births_all %>%
   pivot_wider(names_from = "year_ending_date",
               values_from = "annual_births")
 
+saveRDS(births_all, fpath$births_all)
 write_csv(birth_gp_coeff, fpath$birth_gp_coeff)
 write_csv(births_predicted, fpath$births_predicted)
-write_csv(births_all, fpath$births_all)
 write_csv(births_predicted_wide, fpath$births_predicted_wide)
 write_csv(births_actual_wide, fpath$births_actual_wide)
+write_csv(actual_and_predicted_births, fpath$actual_and_predicted_births, na = "")
+write_csv(actual_and_predicted_births_wide, fpath$actual_and_predicted_births_wide, na = "")

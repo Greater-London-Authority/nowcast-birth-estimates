@@ -8,23 +8,31 @@ fpath <- list(lookup_lad_rgn = "lookups/lookup_lad_rgn.rds",
               births_actual = "data/processed/births_actual.rds")
 
 births_lad <- readRDS(fpath$births_lad) %>%
-  select(gss_code, gss_name, date = year_ending_date, sex, value)
+  mutate(geography = "LAD21") %>%
+  mutate(sort_order = 3) %>%
+  select(gss_code, gss_name, geography, measure, date = year_ending_date, sex, value, sort_order)
 
 births_rgn <- aggregate_to_region(births_lad,
-                                  readRDS(fpath$lookup_lad_rgn)) %>%
-  na.omit()
+                                  readRDS(fpath$lookup_lad_rgn),
+                                  "RGN21") %>%
+  na.omit() %>%
+  mutate(sort_order = 2)
 
 births_itl <- aggregate_to_region(births_lad,
-                                  readRDS(fpath$lookup_lad_itl))
+                                  readRDS(fpath$lookup_lad_itl),
+                                  "ITL221") %>%
+  mutate(sort_order = 4)
 
 births_ctry <- aggregate_to_region(births_lad,
-                                  readRDS(fpath$lookup_lad_ctry))
+                                  readRDS(fpath$lookup_lad_ctry),
+                                  "CTRY21") %>%
+  mutate(sort_order = 1)
 
 births_actual <- bind_rows(births_lad,
                            births_rgn,
                            births_itl,
                            births_ctry) %>%
-  rename(births = value) %>%
-  arrange(gss_code, date)
+  arrange(sort_order, gss_code, date) %>%
+  select(-sort_order)
 
 saveRDS(births_actual, fpath$births_actual)

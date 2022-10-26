@@ -1,10 +1,9 @@
-library(readr)
 library(dplyr)
 source("R/functions/plot_predicted_births.R")
 
-fpath <- list(births_all = "outputs/births_all.csv")
+fpath <- list(births_all = "data/processed/births_all.rds")
 
-births_all <- read_csv(fpath$births_all)
+births_all <- readRDS(fpath$births_all)
 
 all_cds <- unique(births_all$gss_code)
 
