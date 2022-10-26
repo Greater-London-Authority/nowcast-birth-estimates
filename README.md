@@ -60,6 +60,11 @@ process must be placed in
 together with *gp_sya_lad.rds* that is an output of
 [process-published-nhs-data](https://github.com/Greater-London-Authority/process-published-nhs-data)
 
+Birth and patient count data are also published in a suitable format on
+the London Datastore
+[here](https://data.london.gov.uk/dataset/annual-birth-series) and
+[here](https://data.london.gov.uk/dataset/patients-registered-at-a-gp-practice)
+
 The scripts located in
 
     R/
