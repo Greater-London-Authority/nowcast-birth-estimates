@@ -67,7 +67,7 @@ births_gp0 %>%
 
 The average ratio of live births to counts of persons age 0 on the patient register over a user defined period is calculated for each area. These ratios are then applied to patient register counts to create modelled birth estimates. 
 
-```{r, echo=FALSE,  fig.height=3, fig.width=6}
+```{r, echo=FALSE,  fig.height=3, fig.width=8}
 sel_cds <- c("E92000001", "E12000007", "E09000028", "TLH3")
 dt_start <- as.Date("2018-07-01")
 dt_end <- as.Date("2022-01-01")
@@ -80,7 +80,7 @@ ratios_birth_gp0 %>%
   geom_vline(xintercept = dt_start, linetype = "dashed", colour = "grey", size = 1.02) +
   geom_vline(xintercept = dt_end, linetype = "dashed", colour = "grey", size = 1.02) +
   annotate("text", x = dt_label, y = 1.17, label = "Period selected to define ratios",
-           colour = "grey", size = 7) +
+           colour = "grey") +
   ggla_line() +
   ylim(1.05, 1.175) +
   labs(title = "Ratio of births to persons age 0 on patient register") 
