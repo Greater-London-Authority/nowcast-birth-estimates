@@ -66,7 +66,7 @@ births_gp0 %>%
   facet_wrap("gss_name", ncol = 2, scales = "free_y")
 ```
 
-The average ratio of live births to counts of persons age 0 on the patient register over a user defined period is calculated for each area. These ratios are then applied to patient register counts to create modelled birth estimates. 
+The average ratio of live births to counts of persons age 0 on the patient register over a user-defined period is calculated for each area. These ratios are then applied to patient register counts to create modelled birth estimates. 
 
 ```{r, echo=FALSE,  fig.height=3, fig.width=8}
 sel_cds <- c("E92000001", "E12000007", "E09000028", "TLH3")
@@ -90,7 +90,7 @@ ratios_birth_gp0 %>%
 
 Confidence intervals for the predicted births are calculated based on the observed level of variation in the ratio of births to patient counts. The presented intervals reflect a range of two standard deviations in the ratio either side of the mean value.
 
-Ratios for regions and subregions will tend to be exhibit less noise than those for individual local authorities and so estimated confidence intervals will tend to be proportionately smaller.  Ratios for individual areas may shift over time due for reasons including:
+Ratios for regions and subregions will tend to exhibit less noise than those for individual local authorities and so estimated confidence intervals will tend to be proportionately smaller.  Ratios for individual areas may shift over time due to reasons including:
 
 * Changing volumes of infant net migration relative to the number of births
 

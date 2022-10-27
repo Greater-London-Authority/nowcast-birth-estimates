@@ -37,7 +37,7 @@ over the preceding year.
 <img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
 
 The average ratio of live births to counts of persons age 0 on the
-patient register over a user defined period is calculated for each area.
+patient register over a user-defined period is calculated for each area.
 These ratios are then applied to patient register counts to create
 modelled birth estimates.
 
@@ -48,10 +48,10 @@ the observed level of variation in the ratio of births to patient
 counts. The presented intervals reflect a range of two standard
 deviations in the ratio either side of the mean value.
 
-Ratios for regions and subregions will tend to be exhibit less noise
-than those for individual local authorities and so estimated confidence
+Ratios for regions and subregions will tend to exhibit less noise than
+those for individual local authorities and so estimated confidence
 intervals will tend to be proportionately smaller. Ratios for individual
-areas may shift over time due for reasons including:
+areas may shift over time due to reasons including:
 
 -   Changing volumes of infant net migration relative to the number of
     births
