@@ -30,17 +30,24 @@ note](https://data.london.gov.uk/dataset/estimating-births-using-gp-registration
 The methodology relies on the fact that the count of persons age 0
 (i.e. yet to reach their first birthday) resident in an area are
 correlated with the number of births that have taken place in that area
-over the preceding year. The average ratios of live births to counts of
-persons age 0 on the patient register over a user defined period are
-calculated for each area. These mean ratios are then applied to patient
-register counts to create modelled birth estimates. Confidence intervals
-for the predicted births are calculated based on the observed level
-variation in the ratio of births to patient counts. The presented
-intervals reflect a range of two standard deviations in the ratio either
-side of the mean value.
+over the preceding year.
 
-The birth and patient count inputs to the process are entirely based on
-publicly available data:
+<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
+
+The average ratio of live births to counts of persons age 0 on the
+patient register over a user defined period is calculated for each area.
+These ratios are then applied to patient register counts to create
+modelled birth estimates.
+
+<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+
+Confidence intervals for the predicted births are calculated based on
+the observed level of variation in the ratio of births to patient
+counts. The presented intervals reflect a range of two standard
+deviations in the ratio either side of the mean value.
+
+The birth and patient count inputs to the process are derived entirely
+from publicly available data:
 
 1.  Patient counts by age and local authority of residence are based on
     [data published by NHS
@@ -110,3 +117,6 @@ easily.
 
 -   Extend the model to produce modelled estimates of monthly births
     (rather than monthly-updated estimates of annual births).
+
+-   Add versions of plotting functions that don’t rely on having
+    gglaplot installed
