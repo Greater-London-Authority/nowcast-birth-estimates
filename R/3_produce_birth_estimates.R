@@ -1,70 +1,75 @@
 library(dplyr)
 library(readr)
-library(lubridate)
 
-source("R/functions/calc_birth_gp_coefficients.R")
-source("R/functions/predict_births.R")
+source("R/functions/project_ratios.R")
+source("R/functions/interpolate_past_gp_ratios.R")
+source("R/functions/interpolate_projected_gp_ratios.R")
 
 fpath <- list(births_actual = "data/processed/births_actual.rds",
               gp_0 = "data/processed/gp_age_0.rds",
-              predicted_births_output = "outputs/predicted_births.csv",
-              actual_births_output = "outputs/actual_births.csv",
-              gp_age_0_output = "outputs/gp_age_0_count.csv",
-              birth_gp_coeff = "outputs/model_coefficients.csv",
-              births_all = "outputs/births_all.rds",
-              actual_and_predicted_births = "outputs/actual_and_predicted_births.csv")
-
-# these dates define the period on which the model bases the relationships between patient counts and
-# annual births used to predict recent births
-date_start <- "2018-07-01"
-# leave as "" to use up to the date of the most recent actual birth data
-date_end <- ""
-
-#-----
+              actual_and_predicted_births_rds = "outputs/actual_and_predicted_births.rds",
+              actual_and_predicted_births_csv = "outputs/actual_and_predicted_births.csv")
 
 births_actual <- readRDS(fpath$births_actual) %>%
   rename(annual_births = value) %>%
   select(-measure)
 
+dts_actual_births <- unique(births_actual$date)
+
 gp_0 <- readRDS(fpath$gp_0) %>%
   rename(gp_count = value) %>%
-  select(-measure) %>%
-  filter(date >= as.Date(date_start))
+  select(-measure)
 
-birth_gp_coeff <- calc_birth_gp_coefficients(births_actual, gp_0, date_start, date_end)
+gp_ratios <- inner_join(births_actual, gp_0,
+                        by = c("gss_code", "gss_name", "geography", "date", "sex")) %>%
+  mutate(ratio = annual_births/gp_count) %>%
+  select(-c(annual_births, gp_count)) %>%
+  arrange(gss_code, sex, date)
 
-births_predicted <- predict_births(birth_gp_coeff, gp_0) %>%
-  filter(date >= as.Date(date_start))
+dt_last_actual_ratio <- max(gp_ratios$date)
 
-births_all <- bind_rows(
-  births_actual %>%
-    mutate(ci_lower = annual_births, ci_upper = annual_births, type = "actual"),
-  births_predicted %>%
-    mutate(type = "predicted")
-) %>%
-  rename(year_ending_date = date)
+dates_int_projected <- gp_0 %>%
+  filter(date > dt_last_actual_ratio) %>%
+  select(date) %>%
+  distinct() %>%
+  pull(date)
 
-actual_and_predicted_births <- births_actual %>%
-  rename(actual_births = annual_births) %>%
-  full_join(rename(births_predicted, predicted_births = annual_births), by = NULL) %>%
-  full_join(gp_0, by = NULL) %>%
-  rename(year_ending_date = date) %>%
-  arrange(geography, gss_code, sex, year_ending_date)
+dates_int_past <- gp_0 %>%
+  filter(date < dt_last_actual_ratio) %>%
+  select(date) %>%
+  distinct() %>%
+  pull(date)
 
-actual_births_output <- births_actual %>%
-  rename(year_ending_date = date) %>%
-  mutate(type = "actual")
+#-----------project future ratios -----------
+#currently using exponential smoothing method from the Fable package
 
-predicted_births_output <- births_predicted %>%
-  rename(year_ending_date = date) %>%
-  mutate(type = "predicted")
+projected_ratios <- project_ratios_ets(gp_ratios)
 
-gp_age_0_output <- readRDS(fpath$gp_0) %>%
-  filter(date >= as.Date(date_start))
+#---------Interpolate ratios ----------------
+#past and future ratios are for mid and calendar years
+#interpolate ratios for each month
 
-saveRDS(births_all, fpath$births_all)
-write_csv(birth_gp_coeff, fpath$birth_gp_coeff)
-write_csv(predicted_births_output, fpath$predicted_births_output)
-write_csv(actual_births_output, fpath$actual_births_output)
-write_csv(actual_and_predicted_births, fpath$actual_and_predicted_births, na = "")
-write_csv(gp_age_0_output, fpath$gp_age_0_output)
+interpolated_ratios <- bind_rows(
+  interpolate_past_gp_ratios(gp_ratios, dates_int_past),
+  interpolate_projected_gp_ratios(projected_ratios, dates_int_projected)
+)
+
+#--------Generate births from ratios ---------
+#multiply projected/interpolated ratios by monthly gp counts to get births
+
+actual_and_predicted_births <- interpolated_ratios %>%
+  left_join(gp_0, by = c("gss_code", "gss_name", "geography", "sex", "date")) %>%
+  mutate(annual_births = ratio * gp_count,
+         interval_upper = ratio_upper * gp_count,
+         interval_lower = ratio_lower * gp_count) %>%
+  mutate(type = case_when(
+    date > dt_last_actual_ratio ~ "predicted",
+    date %in% dts_actual_births ~ "actual",
+    TRUE ~ "interpolated"
+  )) %>%
+  select(-c(ratio, ratio_lower, ratio_upper, gp_count)) %>%
+  arrange(gss_code, sex, date)
+
+#write to output folder as RDS and CSV
+saveRDS(actual_and_predicted_births, fpath$actual_and_predicted_births_rds)
+write_csv(actual_and_predicted_births, fpath$actual_and_predicted_births_csv, na = "")
