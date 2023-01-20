@@ -1,7 +1,7 @@
 library(dplyr)
 library(readr)
 
-source("R/functions/project_ratios.R")
+source("R/functions/project_ratios_ets.R")
 source("R/functions/interpolate_past_gp_ratios.R")
 source("R/functions/interpolate_projected_gp_ratios.R")
 
@@ -59,14 +59,14 @@ interpolated_ratios <- bind_rows(
 
 actual_and_predicted_births <- interpolated_ratios %>%
   left_join(gp_0, by = c("gss_code", "gss_name", "geography", "sex", "date")) %>%
-  mutate(annual_births = ratio * gp_count,
-         interval_upper = ratio_upper * gp_count,
-         interval_lower = ratio_lower * gp_count) %>%
   mutate(type = case_when(
     date > dt_last_actual_ratio ~ "predicted",
     date %in% dts_actual_births ~ "actual",
     TRUE ~ "interpolated"
   )) %>%
+  mutate(annual_births = round(ratio * gp_count, 1),
+         interval_lower = round(ratio_lower * gp_count, 1),
+         interval_upper = round(ratio_upper * gp_count, 1)) %>%
   select(-c(ratio, ratio_lower, ratio_upper, gp_count)) %>%
   arrange(gss_code, sex, date)
 
