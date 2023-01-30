@@ -2,9 +2,10 @@ library(dplyr)
 library(tidyr)
 library(zoo)
 
-interpolate_gp_ratios <- function(in_ratios, w_intervals = FALSE){
+interpolate_gp_ratios <- function(in_ratios, dt_min,
+                                  w_intervals = FALSE){
 
-  sel_dates <- seq.Date(from = min(in_ratios$date),
+  sel_dates <- seq.Date(from = dt_min,
                         to = max(in_ratios$date),
                         by = "1 month")
 

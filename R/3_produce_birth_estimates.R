@@ -34,7 +34,7 @@ dates_actual_ratios <- unique(gp_ratios$date)
 
 projected_ratios <- project_ratios_ets(gp_ratios,
                                        max_horizon = 6,
-                                       dt_min = as.Date("2015-01-01"),
+                                       dt_min = as.Date("2016-07-01"),
                                        dt_max = as.Date("2050-01-01"))
 
 #---------Interpolate ratios ----------------
@@ -42,8 +42,12 @@ projected_ratios <- project_ratios_ets(gp_ratios,
 #interpolate ratios for each month
 
 monthly_ratios <- bind_rows(
-  interpolate_gp_ratios(gp_ratios, w_intervals = FALSE),
-  interpolate_gp_ratios(projected_ratios, w_intervals = TRUE)
+  interpolate_gp_ratios(gp_ratios,
+                        dt_min = min(dates_actual_ratios),
+                        w_intervals = FALSE),
+  interpolate_gp_ratios(projected_ratios,
+                        dt_min = max(dates_actual_ratios) + months(1),
+                        w_intervals = TRUE)
 ) %>%
   mutate(ratio_type = case_when(
     date > max(dates_actual_ratios) ~ "predicted",
