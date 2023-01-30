@@ -21,54 +21,135 @@ annual births based on counts of infants registered with GP practices.
 Modelled birth estimates can be produced with the same frequency and
 latency that [NHS
 Digital](https://digital.nhs.uk/data-and-information/publications/statistical/patients-registered-at-a-gp-practice)
-publishes patient count data - currently this is monthly and with a lag
-of 1-2 weeks from the extract date.
+publishes patient count data - currently monthly and with a lag of 1-2
+weeks from the extract date.
 
 # Overview of methodology
 
 The approach used to generate the modelled birth estimates was
 originally described in this [2016 technical
 note](https://data.london.gov.uk/dataset/estimating-births-using-gp-registration-data).
-The methodology relies on the fact that the count of persons age 0
-(i.e. yet to reach their first birthday) resident in an area are
-correlated with the number of births that have taken place in that area
-over the preceding year.
+The methodology relies on the strong correlation between the patient
+register counts of persons age 0 (i.e. yet to reach their first
+birthday) resident in an area with the number of births that have taken
+place in that area over the preceding year.
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
+<img src="man/figures/README-births & gp counts-1.png" width="100%" />
 
-The average ratio of live births to counts of persons age 0 on the
-patient register over a user-defined period is calculated for each area.
-These ratios are then applied to patient register counts to create
-modelled birth estimates.
+The correlation between births and patient counts tends to be greater at
+larger geographic areas, such as regions and subregions, than it is for
+individual local authorities.
 
-<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+<img src="man/figures/README-correlation_coefficients-1.png" width="100%" /><img src="man/figures/README-correlation_coefficients-2.png" width="100%" />
 
-Confidence intervals for the predicted births are calculated based on
-the observed level of variation in the ratio of births to patient
-counts. The presented intervals reflect a range of two standard
-deviations in the ratio either side of the mean value.
+Ratios of births to patient register counts vary over time. The reasons
+for changes in a given area might include:
 
-Ratios for regions and subregions will tend to exhibit less noise than
-those for individual local authorities and so estimated confidence
-intervals will tend to be proportionately smaller. Ratios for individual
-areas may shift over time due to reasons including:
+- Changing volumes of infant net migration relative to the number of
+  births
+- A change in the average period between a child being born and being
+  added to the patient register
+- A change in the proportion of infants not included on the patient
+  register at all (e.g. those that engage exclusively wit private
+  healthcare services)
+- A change in the average time taken for changes in address to be
+  reflected in the patient register
 
--   Changing volumes of infant net migration relative to the number of
-    births
+<img src="man/figures/README-birth to gp ratio plots-1.png" width="100%" />
 
--   A change in the average period between a child being born and being
-    added to the patient register
+Recent ratios are forecast from the time series of available past data.
+In the current implementation a simple exponential smoothing method from
+the *Fable* package is used to do this. For each area, the model returns
+the mean forecast value of the ratio as well as the 95 percent
+prediction interval.
 
--   A change in the proportion of infants not included on the patient
-    register at all (e.g. those that engage exclusively wit private
-    healthcare services)
+Past ratios are currently calculated using annual births for mid and
+calendar year periods and the forecast ratios produced by the time
+series model have the same frequency.
 
--   A change in the average time taken for changes in address to be
-    reflected in the patient register
+Both forecast and past ratios are interpolated to match the monthly
+frequency of the patient register data. This allows:
 
-**Note: the COVID-19 pandemic may have significantly impacted one or
-more of these factors in many areas - apply appropriate caution in
-interpreting modelled estimates that may have been affected**
+- predicted recent births to be updated monthly as each new set of
+  patient count data is released
+- creation of annual birth estimates for the months between standard
+  mid-year and calendar year releases (these estimates are labelled as
+  ‘interpolated’ in the output files)
+
+**Note:** annual birth estimates can be constructed directly from
+official monthly birth estimates published by ONS as semi-regular
+releases.
+
+<img src="man/figures/README-plot actual and projected ratios-1.png" width="100%" />
+
+Predicted recent births for each area are calculated as the product of
+recent patient register counts and forecast ratios.
+
+<img src="man/figures/README-actual and predicted birth plot-1.png" width="100%" />
+
+A given set of birth predictions can be compared with subsequent actuals
+once they become available.
+
+<img src="man/figures/README-compare actual predicted births plot-1.png" width="100%" />
+
+# Assessing the accuracy of birth predictions
+
+To assess the overall accuracy of the predictions, we can produce and
+analyse multiple sets of predictions based on the data available at
+different points in the past. To provide context, accompanying sets of
+‘naive’ predictions are produced using the simple method of predicting
+future annual births in an area will be the same as the last actual
+estimate.
+
+This approach provides an indication of how the accuracy of predictions
+might be expected to vary, e.g.: over time, by distance from last actual
+data, by geographical area. In addition, this approach allows an
+empirical assessment of the reliability of the stated prediction
+intervals estimated by the model.
+
+## Accuracy by geography and forecast horizon
+
+The mean accuracy of modelled births is strongly dependent on geography,
+with predictions for local authority districts being far less accurate
+than those for higher level geographies. For districts, accuracy appears
+to decrease gradually with forecast horizon, though the relationship is
+unclear for larger geographies.
+
+Births modelled using patient count data proved to be far more accurate
+than naive prediction. In contrast to the modelled data, the accuracy of
+the naive predictions showed much less variation by geography, but
+rapidly declined as the forecast horizon increased.
+
+<img src="man/figures/README-mean errors by horizon-1.png" width="100%" /><img src="man/figures/README-mean errors by horizon-2.png" width="100%" />
+
+<img src="man/figures/README-accuracy boxplots-1.png" width="100%" /><img src="man/figures/README-accuracy boxplots-2.png" width="100%" /><img src="man/figures/README-accuracy boxplots-3.png" width="100%" /><img src="man/figures/README-accuracy boxplots-4.png" width="100%" />
+
+## Accuracy over time
+
+The mean accuracy of the modelled births for a given forecast horizon
+and geography have remained relatively consistent (within \~0.5% MAPE)
+over successive sets of predictions. Accuracy of the naive predictions
+varied by a much greater degree over time.
+
+<img src="man/figures/README-accuracy over time-1.png" width="100%" /><img src="man/figures/README-accuracy over time-2.png" width="100%" />
+
+## Reliability of stated prediction intervals
+
+The modelled births are currently produced with a stated 95% prediction
+interval. This interval is determined by the estimated prediction
+interval for the forecast ratios produced by the time series model (as
+predicted births are proportional to the forecast ratios).
+
+To test the reliability of the estimated intervals we count the
+proportion of subsequent actual births that sat within the stated
+interval across all sets of predictions.
+
+While there is insufficient data to assess the reliability at larger
+geographies, it can be concluded that the stated ranges underestimate
+the true 95% prediction intervals for both ITL2 and local authority
+districts.
+
+<img src="man/figures/README-proportion within prediction interval-1.png" width="100%" />
 
 # Data inputs
 
@@ -95,26 +176,26 @@ must be placed in
 
     data/raw/
 
-Suitably formatted
-[birth](https://data.london.gov.uk/dataset/annual-birth-series) and
+[Birth](https://data.london.gov.uk/dataset/annual-birth-series) and
 [patient count
 data](https://data.london.gov.uk/dataset/patients-registered-at-a-gp-practice)
 inputs are published on the London Datastore, though these may not
-reflect the very latest data.
+reflect the latest available data.
 
-These inputs are processed into the form required by the scripts
+These inputs are processed into a suitable format by:
 
     R/1_process_lad_actual_births.R
-    and
+
+and
+
     R/2_process_lad_gp_data.R
 
-Modelled birth estimates are produced by the script
+These scripts only need to be run when updating birth or patient count
+data.
+
+Once the input data has been processed, modelled births are produced by:
 
     R/3_produce_birth_estimates.R
-
-Users can adjust the period on which the relationships between births
-and patient counts are based by changing the values assigned to
-*date_start* and *date_end*.
 
 Various files containing actual and predicted births for local
 authorities, ITL2 subregions, Regions, and countries, as well as the
@@ -122,42 +203,7 @@ underlying GP count data are output by the process and saved in
 
     outputs/
 
-The file *model_coefficients.csv* contains information for each area
-about the mean birth to patient count ratio, the standard deviation of
-the ratio, the correlation between births and patient counts and the
-period of past data for which these values were calculated.
-
-| gss_code  | gss_name             | geography | sex     | mean_ratio |  sd_ratio | correlation_coefficient | period_start | period_end |
-|:----------|:---------------------|:----------|:--------|-----------:|----------:|------------------------:|:-------------|:-----------|
-| E06000001 | Hartlepool           | LAD21     | persons |   1.120997 | 0.0196619 |               0.9277955 | 2018-07-01   | 2022-01-01 |
-| E06000002 | Middlesbrough        | LAD21     | persons |   1.135844 | 0.0273983 |               0.9591546 | 2018-07-01   | 2022-01-01 |
-| E06000003 | Redcar and Cleveland | LAD21     | persons |   1.080348 | 0.0138575 |               0.9849981 | 2018-07-01   | 2022-01-01 |
-| E06000004 | Stockton-on-Tees     | LAD21     | persons |   1.115073 | 0.0223604 |               0.9618476 | 2018-07-01   | 2022-01-01 |
-| E06000005 | Darlington           | LAD21     | persons |   1.093632 | 0.0149155 |               0.9431178 | 2018-07-01   | 2022-01-01 |
-| E06000006 | Halton               | LAD21     | persons |   1.086560 | 0.0113313 |               0.9843031 | 2018-07-01   | 2022-01-01 |
-
 Plots of the results for each area can optionally be generated by
 *4_produce_birth_plots.R* and these are saved in
 
     outputs/plots/
-
-### Example plots
-
-![example 1](man/figures/E12000007.png)
-
-![example 2](man/figures/E09000021.png)
-
-![example 3](man/figures/TLH3.png)
-
-## To do
-
--   Add functionality to facilitate empirical quantification of the
-    accuracy of modelled estimates and to identify the optimal period of
-    past data on which to base the relationships between births and
-    patient counts
-
--   Extend the model to produce modelled estimates of monthly births
-    (rather than monthly-updated estimates of annual births).
-
--   Add versions of plotting functions that don’t rely on having
-    gglaplot installed

@@ -7,6 +7,10 @@ fpath <- list(lookup_lad_rgn = "lookups/lookup_lad_rgn.rds",
               births_lad = "data/raw/births_lad.rds",
               births_actual = "data/processed/births_actual.rds")
 
+if(!file.exists(fpath$births_lad)) stop("Input birth data file not found")
+
+#read input births for local authorities; aggregate to higher geographies; combine into single file
+
 births_lad <- readRDS(fpath$births_lad) %>%
   filter(grepl("E0", gss_code)) %>%
   mutate(geography = "LAD21") %>%

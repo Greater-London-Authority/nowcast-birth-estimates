@@ -8,6 +8,10 @@ fpath <- list(gp_sya = "data/raw/gp_sya_lad.rds",
               lookup_lad_itl = "lookups/lookup_lad_itl.rds",
               lookup_lad_ctry = "lookups/lookup_lad_ctry.rds")
 
+if(!file.exists(fpath$gp_sya)) stop("Input GP count data file not found")
+
+#read input gp data for local authorities; aggregate to higher geographies; combine into single file
+
 gp_0_lad <- readRDS(fpath$gp_sya) %>%
   filter(sex == "persons",
          age == 0,
