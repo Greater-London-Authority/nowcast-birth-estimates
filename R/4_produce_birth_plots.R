@@ -11,7 +11,8 @@ if(!dir.exists(fpath$dir_plots)) dir.create(fpath$dir_plots)
 
 #read and consolidate birth data read for plotting
 
-births_modelled <- readRDS(fpath$actual_and_predicted_births_rds)
+births_modelled <- readRDS(fpath$actual_and_predicted_births_rds) %>%
+  rename(type = birth_type)
 
 births_actual <- readRDS(fpath$births_actual) %>%
   filter(date < min(births_modelled$date)) %>%
