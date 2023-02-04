@@ -39,7 +39,7 @@ rm(births_actual, births_modelled)
 
 #create and save a lookup to help users
 births_all %>%
-  select(gss_code, gss_name) %>%
+  select(name = gss_name, code = gss_code, geography) %>%
   distinct() %>%
   write_csv(fpath$lookup_gss)
 
