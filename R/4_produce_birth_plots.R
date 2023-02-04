@@ -77,7 +77,8 @@ for(sel_cd in all_cds) {
                                 births_all,
                                 dt_plot_start = as.Date("2001-01-01"),
                                 dt_relative_to = as.Date("2012-07-01"),
-                                d_breaks = "2 years")
+                                d_breaks = "2 years",
+                                pt_size = 3)
 
   ggsave(filename = paste0(dir_plt, sel_cd, fstub),
          device = "png", height = 6, width = 12)

@@ -7,7 +7,7 @@ plot_predicted_births_indexed <- function(sel_cd, births_all,
                                           dt_plot_start = as.Date("2011-06-30"),
                                           dt_relative_to = as.Date("2019-07-01"),
                                           d_breaks = "1 year",
-                                          exc_actual_line = FALSE){
+                                          pt_size = 3){
 
   baseline_births <- births_all %>%
     filter(gss_code == sel_cd) %>%
