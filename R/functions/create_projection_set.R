@@ -17,7 +17,8 @@ create_projection_set <- function(dt_project_from,
                              dt_max = dt_project_from)
 
   ts_model <- ts_ratios %>%
-    model(ETS = ETS(ratio))
+    model(ETS =  ETS(ratio ~ error("A") +
+                       trend() + season("N")))
 
   model_forecast <- forecast(ts_model, h = max_horizon)
 

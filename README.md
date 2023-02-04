@@ -32,12 +32,14 @@ from publicly available data:
 1.  Patient counts by age and local authority of residence are based on
     [data published by NHS
     Digital](https://digital.nhs.uk/data-and-information/publications/statistical/patients-registered-at-a-gp-practice)
-    and modelled into the form used here in a [separate
-    process](https://github.com/Greater-London-Authority/process-published-nhs-data)
+    and modelled into the form used here by the
+    [process-published-nhs-data](https://github.com/Greater-London-Authority/process-published-nhs-data)
+    process.
 
 2.  Annual births by local authority are based on official ONS estimates
-    collated from several different publications by [this
-    process](https://github.com/Greater-London-Authority/collate-birth-data)
+    collated from several different publications by the
+    [collate-birth-data](https://github.com/Greater-London-Authority/collate-birth-data)
+    process.
 
 # Setup and usage
 
@@ -120,9 +122,9 @@ the *Fable* package is used to do this. For each area, the model returns
 the mean forecast value of the ratio as well as the 95 percent
 prediction interval.
 
-Past ratios are currently calculated using annual births for mid and
-calendar year periods and the forecast ratios produced by the time
-series model have the same frequency.
+Past ratios are calculated using annual births for mid and calendar year
+periods and the forecast ratios produced by the time series model have
+the same frequency.
 
 Both forecast and past ratios are interpolated to match the monthly
 frequency of the patient register data. This allows:
@@ -133,10 +135,6 @@ frequency of the patient register data. This allows:
   mid-year and calendar year releases (these estimates are labelled as
   ‘interpolated’ in the output files)
 
-**Note:** annual birth estimates can be constructed directly from
-official monthly birth estimates published by ONS as semi-regular
-releases.
-
 <img src="man/figures/README-plot actual and projected ratios-1.png" width="100%" />
 
 Predicted recent births for each area are calculated as the product of
@@ -144,12 +142,32 @@ recent patient register counts and forecast ratios.
 
 <img src="man/figures/README-actual and predicted birth plot-1.png" width="100%" />
 
+# Potential improvements
+
+##### Incorporate monthly annual birth estimates
+
+Currently only actual births for mid and calendar year periods are used
+to calculate past ratios. Monthly annual birth estimates for recent
+years could be constructed directly from official monthly birth
+estimates that ONS publish as semi-regular ad-hoc releases. This is
+currently listed as a TODO in [collate birth
+data](https://github.com/Greater-London-Authority/collate-birth-data).
+
+Including monthly actual data would:
+
+- greatly increase the number of data points available as a basis for
+  forecasting ratios and cross validation
+- remove the need to interpolate monthly ratios from the 6 monthly data
+- increase potential to account for seasonality in the ratios
+- extend the approach to create estimates of recent births by month
+  (rather than annual births by month of year ending)
+
+# Assessing accuracy of birth predictions
+
 A given set of birth predictions can be compared with subsequent actuals
 once they become available.
 
 <img src="man/figures/README-compare actual predicted births plot-1.png" width="100%" />
-
-# Assessing the accuracy of birth predictions
 
 To assess the overall accuracy of the predictions, we can produce and
 analyse multiple sets of predictions based on the data available at
@@ -177,7 +195,7 @@ than naive prediction. In contrast to the modelled data, the accuracy of
 the naive predictions showed much less variation by geography, but
 rapidly declined as the forecast horizon increased.
 
-<img src="man/figures/README-mean errors by horizon-1.png" width="100%" /><img src="man/figures/README-mean errors by horizon-2.png" width="100%" />
+<img src="man/figures/README-mean errors by horizon-1.png" width="50%" /><img src="man/figures/README-mean errors by horizon-2.png" width="50%" />
 
 <img src="man/figures/README-accuracy boxplots-1.png" width="100%" /><img src="man/figures/README-accuracy boxplots-2.png" width="100%" /><img src="man/figures/README-accuracy boxplots-3.png" width="100%" /><img src="man/figures/README-accuracy boxplots-4.png" width="100%" />
 

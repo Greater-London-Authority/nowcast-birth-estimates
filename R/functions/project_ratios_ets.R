@@ -18,7 +18,8 @@ project_ratios_ets <- function(gp_ratios,
                key = c(gss_code, gss_name, geography, sex))
 
   ts_model <- ts_ratios %>%
-    model(ets = ETS(ratio)) %>%
+    model(ets = ETS(ratio ~ error("A") +
+                    trend() + season("N"))) %>%
     forecast(h = max_horizon)
 
   projected_ratios <- ts_model %>%

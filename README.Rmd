@@ -28,7 +28,7 @@ library(stringr)
 library(ggplot2)
 library(gglaplot)
 
-source("R/functions/plot_predicted_births_pts.R")
+source("R/functions/plot_predicted_births.R")
 source("R/functions/get_ts_ratios.R")
 source("R/functions/interpolate_gp_ratios.R")
 source("R/functions/create_projection_set.R")
@@ -81,9 +81,9 @@ Official birth estimates from ONS are considered very accurate, but the lag betw
 
 The birth and patient count inputs to the process are derived entirely from publicly available data:
 
-1. Patient counts by age and local authority of residence are based on [data published by NHS Digital](https://digital.nhs.uk/data-and-information/publications/statistical/patients-registered-at-a-gp-practice) and modelled into the form used here in a [separate process](https://github.com/Greater-London-Authority/process-published-nhs-data)
+1. Patient counts by age and local authority of residence are based on [data published by NHS Digital](https://digital.nhs.uk/data-and-information/publications/statistical/patients-registered-at-a-gp-practice) and modelled into the form used here by the [process-published-nhs-data](https://github.com/Greater-London-Authority/process-published-nhs-data) process.
 
-2. Annual births by local authority are based on official ONS estimates collated from several different publications by [this process](https://github.com/Greater-London-Authority/collate-birth-data)
+2. Annual births by local authority are based on official ONS estimates collated from several different publications by the [collate-birth-data](https://github.com/Greater-London-Authority/collate-birth-data) process.
 
 # Setup and usage
 
@@ -215,14 +215,12 @@ gp_births_ratios_plt %>%
 
 Recent ratios are forecast from the time series of available past data. In the current implementation a simple exponential smoothing method from the *Fable* package is used to do this. For each area, the model returns the mean forecast value of the ratio as well as the 95 percent prediction interval. 
 
-Past ratios are currently calculated using annual births for mid and calendar year periods and the forecast ratios produced by the time series model have the same frequency. 
+Past ratios are calculated using annual births for mid and calendar year periods and the forecast ratios produced by the time series model have the same frequency. 
 
 Both forecast and past ratios are interpolated to match the monthly frequency of the patient register data. This allows:
 
 * predicted recent births to be updated monthly as each new set of patient count data is released
 * creation of annual birth estimates for the months between standard mid-year and calendar year releases (these estimates are labelled as 'interpolated' in the output files)
-
-**Note:** annual birth estimates can be constructed directly from official monthly birth estimates published by ONS as semi-regular releases.
 
 ```{r project ratios, include=FALSE}
 
@@ -230,9 +228,10 @@ ts_ratios <- get_ts_ratios(filter(gp_ratios, gss_code %in% plt_gss),
                            dt_min = dt_earliest_to_use,
                            dt_max = dt_end)
 
-ts_model <- ts_ratios %>%
-  model(ets_simple = ETS(ratio))
-  
+  ts_model <- ts_ratios %>%
+    model(ets_simple = ETS(ratio ~ error("A") +
+                    trend() + season("N"))) 
+
 fit_model <- forecast(ts_model, h = 6)
 
 projected_ratios <- fit_model %>%
@@ -308,11 +307,26 @@ births_actual %>%
   scale_x_date(labels = label_date_short()) +
   theme(legend.position = "none") +
   labs(title = "Actual and predicted births",
-       subtitle = "(thousands), shading represents 95% prediction interval",
+       subtitle = "(thousands), shaded region represents 95% prediction interval",
        caption = paste0("Date of last actual births used in prediction: ", dt_end)) +
   facet_wrap("gss_name", scales = "free_y")
 
 ```
+
+# Potential improvements
+
+##### Incorporate monthly annual birth estimates
+
+Currently only actual births for mid and calendar year periods are used to calculate past ratios. Monthly annual birth estimates for recent years could be constructed directly from official monthly birth estimates that ONS publish as semi-regular ad-hoc releases. This is currently listed as a TODO in [collate birth data](https://github.com/Greater-London-Authority/collate-birth-data). 
+
+Including monthly actual data would:
+
+* greatly increase the number of data points available as a basis for forecasting ratios and cross validation
+* remove the need to interpolate monthly ratios from the 6 monthly data
+* increase potential to account for seasonality in the ratios
+* extend the approach to create estimates of recent births by month (rather than annual births by month of year ending)
+
+# Assessing accuracy of birth predictions
 
 A given set of birth predictions can be compared with subsequent actuals once they become available.   
 
@@ -338,8 +352,6 @@ births_actual %>%
   facet_wrap("gss_name", scales = "free_y")
 
 ```
-
-# Assessing the accuracy of birth predictions
 
 To assess the overall accuracy of the predictions, we can produce and analyse multiple sets of predictions based on the data available at different points in the past. To provide context, accompanying sets of 'naive' predictions are produced using the simple method of predicting future annual births in an area will be the same as the last actual estimate.  
 
@@ -372,7 +384,7 @@ The mean accuracy of modelled births is strongly dependent on geography, with pr
 
 Births modelled using patient count data proved to be far more accurate than naive prediction.  In contrast to the modelled data, the accuracy of the naive predictions showed much less variation by geography, but rapidly declined as the forecast horizon increased.
 
-```{r mean errors by horizon, echo=FALSE}
+```{r mean errors by horizon, echo=FALSE, out.width='50%', fig.show='hold'}
 
 plot_mean_errors <- function(sel_model, mean_errors) {
   

@@ -33,27 +33,51 @@ dates_actual_ratios <- unique(gp_ratios$date)
 #currently using exponential smoothing method from the Fable package
 
 projected_ratios <- project_ratios_ets(gp_ratios,
-                                       max_horizon = 6,
+                                       max_horizon = 5,
                                        dt_min = as.Date("2016-07-01"),
                                        dt_max = as.Date("2050-01-01"))
 
 #---------Interpolate ratios ----------------
 #past and future ratios are for mid and calendar years
 #interpolate ratios for each month
+#TODO fix unrealistic interpolated prediction intervals for months up to h = 1
 
-monthly_ratios <- bind_rows(
-  interpolate_gp_ratios(gp_ratios,
-                        dt_min = min(dates_actual_ratios),
-                        w_intervals = FALSE),
-  interpolate_gp_ratios(projected_ratios,
-                        dt_min = max(dates_actual_ratios) + months(1),
-                        w_intervals = TRUE)
-) %>%
+#for the months before h = 1, interpolate mean ratio between the projected and last actual
+#assign these prediction intervals that are the same width as those at h = 1
+
+dt_h1 <- min(projected_ratios$date)
+
+initial_interval_widths <- projected_ratios %>%
+  filter(date == dt_h1) %>%
+  mutate(width_lower = ratio - ratio_lower,
+         width_upper = ratio_upper - ratio) %>%
+  select(gss_code, sex, width_lower, width_upper)
+
+monthly_projected_ratios <- interpolate_gp_ratios(projected_ratios,
+                             min(projected_ratios$date),
+                             w_intervals = TRUE)
+
+
+
+monthly_ratios <- interpolate_gp_ratios(bind_rows(gp_ratios, monthly_projected_ratios),
+                                        min(dates_actual_ratios),
+                                        w_intervals = FALSE) %>%
   mutate(ratio_type = case_when(
     date > max(dates_actual_ratios) ~ "predicted",
     date %in% dates_actual_ratios ~ "actual",
     TRUE ~ "interpolated"
-  ))
+  )) %>%
+  left_join(initial_interval_widths, by = c("gss_code", "sex")) %>%
+  mutate(ratio_lower = case_when(
+    (date < dt_h1 & ratio_type == "predicted") ~ ratio - width_lower,
+    TRUE ~ ratio_lower
+  )) %>%
+  mutate(ratio_upper = case_when(
+    (date < dt_h1 & ratio_type == "predicted") ~ ratio + width_upper,
+    TRUE ~ ratio_upper
+  )) %>%
+  select(-c(width_lower, width_upper))
+
 
 
 ratio_output <- monthly_ratios %>%
@@ -68,7 +92,7 @@ ratio_output <- monthly_ratios %>%
 actual_and_predicted_births <- monthly_ratios %>%
   select(-ratio_type) %>%
   inner_join(gp_0, by = c("gss_code", "gss_name", "geography", "sex", "date")) %>%
-  mutate(birth_type = case_when(
+  mutate(type = case_when(
     date > max(dates_actual_births) ~ "predicted",
     date %in% dates_actual_births ~ "actual",
     TRUE ~ "interpolated"

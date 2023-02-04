@@ -3,29 +3,37 @@ library(ggplot2)
 library(gglaplot)
 library(lubridate)
 
-plot_predicted_births_pts <- function(sel_codes, pred_births,
-                                      dt_actual_start = as.Date("2018-06-30"),
-                                      d_breaks = "3 months",
-                                      exc_actual_line = FALSE,
-                                      pt_size = 3){
+plot_predicted_births <- function(sel_cd, births_all,
+                                  dt_plot_start = as.Date("2016-06-30"),
+                                  d_breaks = "3 months",
+                                  pt_size = 3){
 
-  pbirths <- pred_births %>%
-    filter(gss_code %in% sel_codes) %>%
-    filter(date >= dt_actual_start)
+  births_df <- births_all %>%
+    filter(gss_code == sel_cd) %>%
+    filter(date >= dt_plot_start)
 
-  abirths <- pbirths %>%
+  pbirths <- births_df %>%
+    filter(type == "predicted")
+
+  abirths <- births_df %>%
     filter(type == "actual")
 
-  if(exc_actual_line) pbirths <- filter(pbirths, type == "predicted")
+  ibirths <- births_df %>%
+    filter(type2 == "past") %>%
+    mutate(type = "interpolated")
 
-  sel_name <- unique(pbirths$gss_name)
+  sel_name <- unique(births_df$gss_name)
 
   plt_births <- pbirths %>%
     ggplot(aes(x = date, y = annual_births, colour = type, ymin = interval_lower, ymax = interval_upper, fill = type)) +
     theme_gla(free_y_facets = TRUE) +
     ggla_line() +
     geom_ribbon(alpha = 0.2) +
-    geom_point(data = abirths, shape = 19, size = pt_size) +
+
+    ggla_line(data = ibirths, alpha = 0.4) +
+
+    geom_point(data = abirths, shape = 18, size = pt_size) +
+
     scale_x_date(date_breaks = d_breaks, labels = label_date_short(),
                  expand = c(0, 0)) +
     scale_y_continuous(n.breaks = 8) +
