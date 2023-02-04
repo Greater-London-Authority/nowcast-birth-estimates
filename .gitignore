@@ -44,6 +44,8 @@ rsconnect/
 # End of https://www.toptal.com/developers/gitignore/api/r
 
 # Data and output directories
-data/*
-!data/README*
+data/processed/*
+data/intermediate/*
+data/raw/*
+!data/raw/*.txt
 outputs/*
