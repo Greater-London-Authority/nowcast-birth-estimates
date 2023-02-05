@@ -6,7 +6,6 @@ source("R/2_process_lad_gp_data.R")
 source("R/3_produce_birth_estimates.R")
 
 #optional - produce plots of births for each area
-#notes:
 #     this can take ~15 mins to run
-#     current implementation requires that the gglaplot package be installed
+#     plots will be created using gglaplot if package installed, standard ggplot2 if not
 source("R/4_produce_birth_plots.R")
