@@ -6,9 +6,14 @@ fpath <- list(gp_sya = "data/raw/gp_sya_lad.rds",
               gp_0 = "data/processed/gp_age_0.rds",
               lookup_lad_rgn = "lookups/lookup_lad_rgn.rds",
               lookup_lad_itl = "lookups/lookup_lad_itl.rds",
+              dir_processed = "data/processed/",
+              dir_intermediate = "data/intermediate/",
               lookup_lad_ctry = "lookups/lookup_lad_ctry.rds")
 
 if(!file.exists(fpath$gp_sya)) stop("Input GP count data file not found")
+
+if(!dir.exists(fpath$dir_processed)) dir.create(fpath$dir_processed)
+if(!dir.exists(fpath$dir_intermediate)) dir.create(fpath$dir_intermediate)
 
 #read input gp data for local authorities; aggregate to higher geographies; combine into single file
 

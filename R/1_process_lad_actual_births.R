@@ -5,9 +5,15 @@ fpath <- list(lookup_lad_rgn = "lookups/lookup_lad_rgn.rds",
               lookup_lad_itl = "lookups/lookup_lad_itl.rds",
               lookup_lad_ctry = "lookups/lookup_lad_ctry.rds",
               births_lad = "data/raw/births_lad.rds",
+              dir_processed = "data/processed/",
+              dir_intermediate = "data/intermediate/",
               births_actual = "data/processed/births_actual.rds")
 
 if(!file.exists(fpath$births_lad)) stop("Input birth data file not found")
+
+if(!dir.exists(fpath$dir_processed)) dir.create(fpath$dir_processed)
+if(!dir.exists(fpath$dir_intermediate)) dir.create(fpath$dir_intermediate)
+
 
 #read input births for local authorities; aggregate to higher geographies; combine into single file
 
