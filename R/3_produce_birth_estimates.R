@@ -6,10 +6,13 @@ source("R/functions/interpolate_gp_ratios.R")
 
 fpath <- list(births_actual = "data/processed/births_actual.rds",
               gp_0 = "data/processed/gp_age_0.rds",
+              dir_outputs = "outputs/",
               actual_and_predicted_births_rds = "outputs/actual_and_predicted_births.rds",
               actual_and_predicted_births_csv = "outputs/actual_and_predicted_births.csv",
               gp_ratios_rds = "outputs/birth_gp_ratios.rds",
               gp_ratios_csv = "outputs/birth_gp_ratios.csv")
+
+if(!dir.exists(fpath$dir_outputs)) dir.create(fpath$dir_outputs)
 
 #--- calculate past ratios of births to gp counts ----
 births_actual <- readRDS(fpath$births_actual) %>%
