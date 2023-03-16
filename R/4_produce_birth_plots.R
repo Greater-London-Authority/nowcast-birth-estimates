@@ -43,6 +43,8 @@ births_all %>%
   distinct() %>%
   write_csv(fpath$lookup_gss)
 
+last_date <- max(births_all$date)
+
 #-------------create plots-------------------
 
 all_cds <- unique(births_all$gss_code) #generate plots for every area in the data by default
@@ -57,7 +59,7 @@ for(sel_cd in all_cds) {
 
   plot_predicted_births(sel_cd,
                             births_all,
-                            dt_plot_start = as.Date("2018-01-01"),
+                            dt_plot_start = last_date - years(5),
                             d_breaks = "3 months",
                             pt_size = 3)
 
