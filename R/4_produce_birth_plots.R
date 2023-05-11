@@ -47,10 +47,14 @@ last_date <- max(births_all$date)
 
 #-------------create plots-------------------
 
+
 all_cds <- unique(births_all$gss_code) #generate plots for every area in the data by default
 
-#plot births since 2018
-fstub <- "_births_from_2018.png"
+#plot last five years of births
+fstub <- "_5yrs.png"
+
+fig_height <- 3
+fig_width <- 5
 
 for(sel_cd in all_cds) {
 
@@ -61,27 +65,72 @@ for(sel_cd in all_cds) {
                             births_all,
                             dt_plot_start = last_date - years(5),
                             d_breaks = "3 months",
-                            pt_size = 3)
+                            pt_size = 2,
+                            b_size = 6)
 
   ggsave(filename = paste0(dir_plt, sel_cd, fstub),
-         device = "png", height = 6, width = 12)
+         device = "png", height = fig_height, width = fig_width)
 }
 
-#plot births since 2001, indexed to 2012
-fstub <- "_births_from_2001_indexed_to_2012.png"
+#plot last fifteen years of births
+fstub <- "_15yrs.png"
+
+fig_height <- 3
+fig_width <- 5
 
 for(sel_cd in all_cds) {
 
   dir_plt <- paste0(fpath$dir_plots, sel_cd, "/")
   if(!dir.exists(dir_plt)) dir.create(dir_plt)
 
-  plot_predicted_births_indexed(sel_cd,
-                                births_all,
-                                dt_plot_start = as.Date("2001-01-01"),
-                                dt_relative_to = as.Date("2012-07-01"),
-                                d_breaks = "2 years",
-                                pt_size = 3)
+  plot_predicted_births(sel_cd,
+                        births_all,
+                        dt_plot_start = last_date - years(15),
+                        d_breaks = "1 year",
+                        pt_size = 2,
+                        b_size = 6)
 
   ggsave(filename = paste0(dir_plt, sel_cd, fstub),
-         device = "png", height = 6, width = 12)
+         device = "png", height = fig_height, width = fig_width)
 }
+
+#plot last thirty years of births
+fstub <- "_25yrs.png"
+
+fig_height <- 3
+fig_width <- 5
+
+for(sel_cd in all_cds) {
+
+  dir_plt <- paste0(fpath$dir_plots, sel_cd, "/")
+  if(!dir.exists(dir_plt)) dir.create(dir_plt)
+
+  plot_predicted_births(sel_cd,
+                        births_all,
+                        dt_plot_start = last_date - years(25),
+                        d_breaks = "2 years",
+                        pt_size = 2,
+                        b_size = 6)
+
+  ggsave(filename = paste0(dir_plt, sel_cd, fstub),
+         device = "png", height = fig_height, width = fig_width)
+}
+
+#plot births since 2001, indexed to 2012
+# fstub <- "_births_from_2001_indexed_to_2012.png"
+#
+# for(sel_cd in all_cds) {
+#
+#   dir_plt <- paste0(fpath$dir_plots, sel_cd, "/")
+#   if(!dir.exists(dir_plt)) dir.create(dir_plt)
+#
+#   plot_predicted_births_indexed(sel_cd,
+#                                 births_all,
+#                                 dt_plot_start = as.Date("2001-01-01"),
+#                                 dt_relative_to = as.Date("2012-07-01"),
+#                                 d_breaks = "2 years",
+#                                 pt_size = 2)
+#
+#   ggsave(filename = paste0(dir_plt, sel_cd, fstub),
+#          device = "png", height = fig_height, width = fig_width)
+# }

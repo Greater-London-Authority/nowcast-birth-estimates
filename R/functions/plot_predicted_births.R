@@ -6,7 +6,8 @@ library(lubridate)
 plot_predicted_births <- function(sel_cd, births_all,
                                   dt_plot_start = as.Date("2016-06-30"),
                                   d_breaks = "3 months",
-                                  pt_size = 3){
+                                  pt_size = 2,
+                                  b_size = 6){
 
   births_df <- births_all %>%
     filter(gss_code == sel_cd) %>%
@@ -26,13 +27,14 @@ plot_predicted_births <- function(sel_cd, births_all,
 
   plt_births <- pbirths %>%
     ggplot(aes(x = date, y = annual_births, colour = type, ymin = interval_lower, ymax = interval_upper, fill = type)) +
-    theme_gla(free_y_facets = TRUE) +
-    ggla_line() +
+    theme_gla(free_y_facets = TRUE,
+              base_size = b_size) +
+    ggla_line(alpha = 0.7) +
     geom_ribbon(alpha = 0.2) +
 
     ggla_line(data = ibirths, alpha = 0.4) +
 
-    geom_point(data = abirths, shape = 18, size = pt_size) +
+    geom_point(data = abirths, shape = 16, size = pt_size, alpha = 0.6) +
 
     scale_x_date(date_breaks = d_breaks, labels = label_date_short(),
                  expand = c(0, 0)) +
