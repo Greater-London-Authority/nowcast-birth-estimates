@@ -49,3 +49,6 @@ data/intermediate/*
 data/raw/*
 !data/raw/*.txt
 outputs/*
+plots/*
+nowcast-birth-estimates-markdown.md
+*.html
