@@ -14,3 +14,4 @@ source("R/4_produce_birth_plots.R")
 source("R/5_prepare_datastore_update.R")
 
 # To do the datastore upload run R/6_update_datastore.R
+# The file is not sourced here to avoid accidental updates.

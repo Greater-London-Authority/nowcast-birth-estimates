@@ -2,7 +2,7 @@
 ################################################################################
 ## WARNING: running this script will update the public facing datastore page. ##
 ## Have a human check the nowcast-birth-estimates-markdown.html file and the  ##
-## data outputs before running this.                                          ##
+## data output files before running this.                                     ##
 ################################################################################
 
 # Project goal - to add the nowcast birth estimates data and supporting info page to the London Datastore using
@@ -51,44 +51,53 @@ lds_patch_dataset(
 
 # 2.2 Add all resources to the dataset
 
-# Create list of resources which need to be uploaded
+# Create list of resources which need to be uploaded and their descriptions
 datastore_resources_list<-
-  as.list(c("outputs/actual_and_predicted_births.csv",
-            "outputs/plots.zip",
-            "outputs/birth_gp_ratios.csv"))
+  list(actual_predicted = "outputs/actual_and_predicted_births.csv",
+       plots = "outputs/plots.zip",
+       ratios = "outputs/birth_gp_ratios.csv")
 
-names(datastore_resources_list)<-seq(1:length(datastore_resources_list))
+datastore_resources_descriptions<-
+  list(actual_predicted = "File combining: official and modelled birth estimates. Data for English local authority districts, regions, and ITL 2 subregions.",
+       plots = "Selected plots of actual and predicted recent births for English local authorities, regions, and ITL 2 subregions. Plots are labelled by their geographic code - a csv lookup of codes and names is included in the zip file.",
+       ratios = "File containing: past birth estimates, modelled counts of patients age 0, actual and modelled ratios of births to patient counts. Data for English local authorities, regions, and ITL2 subregions.")
+
+#names(datastore_resources_list)<-seq(1:length(datastore_resources_list))
+#names(datastore_resources_descriptions)<-seq(1:length(datastore_resources_descriptions))
+
 
 # The following algorithm checks if there are any resources associated with this dataset, and uploads all the ones in
-# datastore_resources_list if there aren't any. If there are already resources associated with the dataset which is
-# being modified then it checks if each of the new resources has a similar name to one of the resources which is
-# already present. If the new resources does have a similar name to an existing one then the former overwrites
-# the latter, whereas new resources which do not have names which are similar to existing resources are uploaded
-# without replacing an existing resource'.
+# datastore_resources_list if there aren't any.
+
+# If there are already resources associated with the dataset which is being modified then where a new resource has
+# the same name as an existing resource it will replace it. Otherwise the new resources will be added to those
+# that are already there.
 
 if (!"resource_id" %in% colnames(lds_meta_dataset(slug=page_slug, my_api_key))) {
 
-  map(datastore_resources_list,
-      ~lds_add_resource(
-        file_path=.x,
-        slug=page_slug,
-        my_api_key
-      ))
+  mapply(function(x, y) lds_add_resource(file_path=x,
+                                         description = y,
+                                         slug=page_slug,
+                                         my_api_key),
+         datastore_resources_list,  # names from first
+         datastore_resources_descriptions)
+
+
+  # map(datastore_resources_list,
+  #     ~lds_add_resource(
+  #       file_path=.x,
+  #       slug=page_slug,
+  #       my_api_key
+  #     ))
 
 } else {
 
-  datastore_resources_list<-
-    bind_rows(datastore_resources_list) %>%
-    gather(number, name) %>%
-    select(name) %>%
-    mutate(name2=basename(name)) %>%
-    mutate(name2=str_remove(name2, "_[:digit:]{4}.jpeg|_[:digit:]{4}.csv"))
+  new_resources_names <- map(datastore_resources_list, basename)
 
   current_resources_names<-
     select(as_tibble(lds_meta_dataset(slug=page_slug, my_api_key)),
            resource_title,
-           resource_id) %>%
-    mutate(resource_title2=str_remove(resource_title, "_[:digit:]{4}.pdf|_[:digit:]{4}.xlsx|_[:digit:]{4}.tiff|_[:digit:]{4}.csv|_[:digit:]{4}.jpeg"))
+           resource_id)
 
   datastore_resources_list<-
     full_join(datastore_resources_list,
