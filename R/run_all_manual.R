@@ -9,3 +9,9 @@ source("R/3_produce_birth_estimates.R")
 #     this can take ~15 mins to run
 #     plots will be created using gglaplot if package installed, standard ggplot2 if not
 source("R/4_produce_birth_plots.R")
+
+# optional - produces a draft html page for checking by a human and zips up plots folder
+source("R/5_prepare_datastore_update.R")
+
+# To do the datastore upload run R/6_update_datastore.R
+# The file is not sourced here to avoid accidental updates.
