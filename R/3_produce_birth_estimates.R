@@ -103,12 +103,24 @@ actual_and_predicted_births <- monthly_ratios %>%
   mutate(annual_births = round(ratio * gp_count, 1),
          interval_lower = round(ratio_lower * gp_count, 1),
          interval_upper = round(ratio_upper * gp_count, 1)) %>%
-  select(-c(ratio, ratio_lower, ratio_upper, gp_count)) %>%
+  select(-c(ratio, ratio_lower, ratio_upper, gp_count))
+
+earlier_actual_births <- births_actual %>%
+  filter(date < min(actual_and_predicted_births$date)) %>%
+  mutate(type = "actual",
+         interval_lower = as.numeric(NA),
+         interval_upper = as.numeric(NA)) %>%
+  select(colnames(actual_and_predicted_births))
+
+full_actual_and_predicted_births <- bind_rows(
+  earlier_actual_births,
+  actual_and_predicted_births) %>%
   arrange(gss_code, sex, date)
 
+
 #write births and ratios to output folder as RDS and CSV
-saveRDS(actual_and_predicted_births, fpath$actual_and_predicted_births_rds)
-write_csv(actual_and_predicted_births, fpath$actual_and_predicted_births_csv, na = "")
+saveRDS(full_actual_and_predicted_births, fpath$actual_and_predicted_births_rds)
+write_csv(full_actual_and_predicted_births, fpath$actual_and_predicted_births_csv, na = "")
 
 saveRDS(ratio_output, fpath$gp_ratios_rds)
 write_csv(ratio_output, fpath$gp_ratios_csv, na = "")
