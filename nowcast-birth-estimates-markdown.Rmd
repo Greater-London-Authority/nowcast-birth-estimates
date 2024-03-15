@@ -95,7 +95,7 @@ The approach used to generate the modelled birth estimates was originally descri
 The data used to create these modelled birth estimates are:
 
 1. [Modelled estimates of patient counts by age, sex, and local authority of residence](https://data.london.gov.uk/dataset/patients-registered-at-a-gp-practice)
-2. [Official estimates of annual live births by local authority of residence](https://data.london.gov.uk/dataset/annual-birth-series)
+2. [Official estimates of annual live births by local authority of residence](https://data.london.gov.uk/dataset/birth-estimates)
 
 A respository of the code used to generate the modelled birth estimates is [available on GitHub](https://github.com/Greater-London-Authority/nowcast-birth-estimates). The repository's ReadMe provides more information about the methodology used to produce the estimates as well as a summary analysis of their past accuracy.
 

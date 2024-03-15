@@ -51,8 +51,8 @@ must be placed in
 
     data/raw/
 
-[Birth](https://data.london.gov.uk/dataset/annual-birth-series) and
-[patient count
+[Birth](https://data.london.gov.uk/dataset/birth-estimates) and [patient
+count
 data](https://data.london.gov.uk/dataset/patients-registered-at-a-gp-practice)
 inputs are published on the London Datastore, though these may not
 reflect the latest available data.
