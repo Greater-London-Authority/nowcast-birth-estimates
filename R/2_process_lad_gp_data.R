@@ -27,7 +27,7 @@ gp_0_lad <- readRDS(fpath$gp_sya) %>%
 
 gp_0_rgn <- aggregate_to_region(gp_0_lad,
                                 readRDS(fpath$lookup_lad_rgn),
-                                "RGN21") %>%
+                                "RGN23") %>%
   mutate(sort_order = 2)
 
 gp_0_itl <- aggregate_to_region(gp_0_lad,
@@ -37,7 +37,7 @@ gp_0_itl <- aggregate_to_region(gp_0_lad,
 
 gp_0_ctry <- aggregate_to_region(gp_0_lad,
                                  readRDS(fpath$lookup_lad_ctry),
-                                 "CTRY21") %>%
+                                 "CTRY23") %>%
   mutate(sort_order = 1)
 
 gp_0 <- bind_rows(gp_0_lad,

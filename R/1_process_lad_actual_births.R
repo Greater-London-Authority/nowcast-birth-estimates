@@ -19,13 +19,13 @@ if(!dir.exists(fpath$dir_intermediate)) dir.create(fpath$dir_intermediate)
 
 births_lad <- readRDS(fpath$births_lad) %>%
   filter(grepl("E0", gss_code)) %>%
-  mutate(geography = "LAD21") %>%
+  mutate(geography = "LAD23") %>%
   mutate(sort_order = 3) %>%
   select(gss_code, gss_name, geography, measure, date = year_ending_date, sex, value, sort_order)
 
 births_rgn <- aggregate_to_region(births_lad,
                                   readRDS(fpath$lookup_lad_rgn),
-                                  "RGN21") %>%
+                                  "RGN23") %>%
   na.omit() %>%
   mutate(sort_order = 2)
 
@@ -36,7 +36,7 @@ births_itl <- aggregate_to_region(births_lad,
 
 births_ctry <- aggregate_to_region(births_lad,
                                   readRDS(fpath$lookup_lad_ctry),
-                                  "CTRY21") %>%
+                                  "CTRY23") %>%
   mutate(sort_order = 1)
 
 births_actual <- bind_rows(births_lad,
