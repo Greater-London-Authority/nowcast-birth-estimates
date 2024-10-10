@@ -129,7 +129,7 @@ The approach used to generate the modelled birth estimates was originally descri
 # City of London and Isles of Scilly are excluded as they are far smaller than other districts
 gss_exclude <- c("E09000001", "E06000053") 
 
-plt_gss <- c("E12000007", "E09000028", "TLH3", "E92000001")
+plt_gss <- c("E12000007", "E09000028", "TLH3", "E92000001", "E08000025", "E07000099")
 
 gp_births_ratios_plt <- inner_join(births_actual, gp_0,
                         by = c("gss_code", "gss_name", "geography", "date", "sex")) %>%
@@ -159,8 +159,10 @@ gp_births_correlation <- inner_join(births_actual, gp_0,
                                     by = c("gss_code", "gss_name", "geography", "date", "sex")) %>%
   filter(date >= dt_earliest_to_use) %>%
   mutate(geog_name = recode(geography,
+                            "LAD23" = "Districts",
                             "LAD21" = "Districts",
                             "RNG21" = "Regions",
+                            "RNG23" = "Regions",
                             "ITL221" = "ITL2 Subregions")) %>%
   arrange(sex, date) %>%
   group_by(gss_code, gss_name, geography, geog_name, sex) %>%
@@ -168,7 +170,7 @@ gp_births_correlation <- inner_join(births_actual, gp_0,
 
 gp_births_correlation %>%
   filter(!gss_code %in% gss_exclude) %>%
-  filter(geography %in% c("LAD21")) %>%
+  filter(grepl("LAD", geography)) %>%
   ggplot(aes(x = correlation_coefficient)) +
   theme_gla(free_y_facets = TRUE, x_axis_title = TRUE, gla_theme = "inverse") +
   geom_histogram(bins = 60, fill = gla_pal()[5]) +
@@ -180,7 +182,7 @@ gp_births_correlation %>%
 
 gp_births_correlation %>%
   filter(!gss_code %in% gss_exclude) %>%
-  filter(geography %in% c("ITL221", "RGN21")) %>%
+  filter(grepl("ITL|RGN", geography)) %>%
   ggplot(aes(x = correlation_coefficient, fill = geography)) +
   theme_gla(free_y_facets = TRUE, x_axis_title = TRUE, gla_theme = "inverse") +
   geom_histogram(bins = 60) +
@@ -336,7 +338,7 @@ births_actual %>%
   rename(value = annual_births) %>%
   mutate(measure = "actual") %>%
   filter(gss_code %in% plt_gss) %>%
-  filter(date >= dt_end - months(12)) %>%
+  filter(date >= dt_end - months(36)) %>%
   ggplot(aes(x = date, y = value/1000, colour = gss_name, fill = gss_name)) +
   theme_gla(free_y_facets = TRUE, gla_theme = "inverse") +
   geom_vline(xintercept = dt_end, linetype = "dashed", colour = "grey") +
@@ -384,7 +386,7 @@ The mean accuracy of modelled births is strongly dependent on geography, with pr
 
 Births modelled using patient count data proved to be far more accurate than naive prediction.  In contrast to the modelled data, the accuracy of the naive predictions showed much less variation by geography, but rapidly declined as the forecast horizon increased.
 
-```{r mean errors by horizon, echo=FALSE, out.width='50%', fig.show='hold'}
+```{r mean errors by horizon, echo=FALSE, fig.show='hold'}
 
 plot_mean_errors <- function(sel_model, mean_errors) {
   
@@ -417,7 +419,7 @@ plot_err_boxplot <- function(sel_geog, forecast_errors,
   errors_df <- forecast_errors %>%
     bind_rows() %>%
     filter(!gss_code %in% gss_exclude) %>%
-    filter(geography == sel_geog) 
+    filter(grepl(sel_geog, geography)) 
   
   number_areas <- length(unique(errors_df$gss_code))
   number_runs <- length(unique(errors_df$projection_date))
@@ -440,10 +442,10 @@ plot_err_boxplot <- function(sel_geog, forecast_errors,
   return(plt)
 }
 
-plot_err_boxplot("CTRY21", forecast_errors)
-plot_err_boxplot("RGN21", forecast_errors)
-plot_err_boxplot("ITL221", forecast_errors)
-plot_err_boxplot("LAD21", forecast_errors)
+plot_err_boxplot("CTRY", forecast_errors)
+plot_err_boxplot("RGN", forecast_errors)
+plot_err_boxplot("ITL", forecast_errors)
+plot_err_boxplot("LAD", forecast_errors)
 
 ```
 
@@ -461,7 +463,7 @@ plot_accuracy_over_time <- function(sel_model, mean_errors) {
     theme_gla(free_y_facets = TRUE, gla_theme = "inverse",
               x_axis_title = TRUE, y_axis_title = TRUE) +
     geom_point() +
-    ggla_line(alpha = 0.3) +
+    ggla_line(alpha = 0.5) +
     scale_x_date(breaks = dates_project_from, labels = label_date_short()) +
     scale_y_continuous(labels = scales::label_percent(), limits = c(0,NA)) +
     labs(title = "Prediction accuracy over time",
@@ -484,7 +486,7 @@ The modelled births are currently produced with a stated 95% prediction interval
 
 To test the reliability of the estimated intervals we count the proportion of subsequent actual births that sat within the stated interval across all sets of predictions.
 
-While there is insufficient data to assess the reliability at larger geographies, it can be concluded that the stated ranges underestimate the true 95% prediction intervals for both ITL2 and local authority districts.  
+This shows that the stated ranges underestimate the true 95% prediction intervals for all geographies.  
 
 ```{r proportion within prediction interval, echo=FALSE}
 
@@ -493,7 +495,8 @@ proportions_within_interval %>%
   ggplot(aes(x = geog_n, y = prop_within_interval, fill = reorder(geog_n, number_areas))) +
   theme_gla(free_y_facets = TRUE, gla_theme = "inverse") +
   
-  ggla_horizbar(position = "dodge", alpha = 0.9) +
+  ggla_horizbar(position = "dodge", alpha = 0.9) + 
+  geom_text(aes(label = 100 * round(prop_within_interval, 3)), colour = "white", hjust = + 2) +
   geom_hline(yintercept = 0.95, colour = "white", linetype = "dashed") +
   scale_y_continuous(n.breaks = 9, labels = scales::label_percent()) +
     labs(title = "Proportion actual births within prediction interval",

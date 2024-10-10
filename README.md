@@ -195,14 +195,14 @@ than naive prediction. In contrast to the modelled data, the accuracy of
 the naive predictions showed much less variation by geography, but
 rapidly declined as the forecast horizon increased.
 
-<img src="man/figures/README-mean errors by horizon-1.png" width="50%" /><img src="man/figures/README-mean errors by horizon-2.png" width="50%" />
+<img src="man/figures/README-mean errors by horizon-1.png" width="100%" /><img src="man/figures/README-mean errors by horizon-2.png" width="100%" />
 
 <img src="man/figures/README-accuracy boxplots-1.png" width="100%" /><img src="man/figures/README-accuracy boxplots-2.png" width="100%" /><img src="man/figures/README-accuracy boxplots-3.png" width="100%" /><img src="man/figures/README-accuracy boxplots-4.png" width="100%" />
 
 ## Accuracy over time
 
 The mean accuracy of the modelled births for a given forecast horizon
-and geography have remained relatively consistent (within \~0.5% MAPE)
+and geography have remained relatively consistent (within ~0.5% MAPE)
 over successive sets of predictions. Accuracy of the naive predictions
 varied by a much greater degree over time.
 
@@ -219,9 +219,7 @@ To test the reliability of the estimated intervals we count the
 proportion of subsequent actual births that sat within the stated
 interval across all sets of predictions.
 
-While there is insufficient data to assess the reliability at larger
-geographies, it can be concluded that the stated ranges underestimate
-the true 95% prediction intervals for both ITL2 and local authority
-districts.
+This shows that the stated ranges underestimate the true 95% prediction
+intervals for all geographies.
 
 <img src="man/figures/README-proportion within prediction interval-1.png" width="100%" />
