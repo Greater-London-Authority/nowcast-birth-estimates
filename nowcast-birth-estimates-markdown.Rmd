@@ -99,10 +99,10 @@ The data used to create these modelled birth estimates are:
 
 A respository of the code used to generate the modelled birth estimates is [available on GitHub](https://github.com/Greater-London-Authority/nowcast-birth-estimates). The repository's ReadMe provides more information about the methodology used to produce the estimates as well as a summary analysis of their past accuracy.
 
-The outputs cover a range of geographies in England.  Data for London show that annual births in London are predicted to have declined since the last official estimate, a continuation of recent trends in the official estimates. 
+The outputs cover a range of geographies in England.
 
 ![](outputs/plots/E12000007/E12000007_5yrs.png)
-Within London there is variation in how annual births are predicted to have changed since the latest official estimates. The majority of boroughs show a decrease in annual births over the period of predicted data. Some boroughs do not follow the overall London trend and instead show an increase in annual births. The map below shows the percentage change between the latest official births estimates (`r format(latest_actual_date, format="%d %b %Y")`) and the latest GLA modelled births estimate (`r format(latest_predicted_date, format="%d %b %Y")`) for London Boroughs.   
+Within London there is variation in how annual births are predicted to have changed since the latest official estimates. The map below shows the percentage change between the latest official births estimates (`r format(latest_actual_date, format="%d %b %Y")`) and the latest GLA modelled births estimate (`r format(latest_predicted_date, format="%d %b %Y")`) for London Boroughs.   
 
 ```{r maps_change_in_births, fig.height = 6, fig.width = 10, echo=FALSE, include = FALSE}
 
@@ -154,7 +154,7 @@ Files containing the outputs from this modelling process are available for downl
 
 The downloads contain official ONS annual births estimates between `r format(earliest_actual_date, format="%d %b %Y")` and `r format(latest_actual_date, format="%d %b %Y")`, interpolated estimates at monthly intervals between official estimates, and predictions of annual births up to `r format(latest_predicted_date, format="%d %b %Y")`. Predicted data are given alongside the upper and lower bounds of the 95% prediction interval.
 
-The data are given for local authority districts, regions, country, and international territorial levels ITL2 in England using 2021 census boundaries.  
+The data are given for local authority districts, regions, country, and international territorial levels ITL2 in England.  
 
 These data are not currently split by sex.
 
