@@ -27,7 +27,8 @@ library(rmarkdown)
 options(scipen=999)
 
 # 1.3 Set my_api_key for the London Datastore
-my_api_key<-Sys.getenv("lds_api_key")
+#my_api_key<-Sys.getenv("lds_api_key")
+my_api_key <- "40bc8594-d75a-4064-93f5-d70ab4f986b4"
 
 # 1.4 the slug is the name of the datastore page as given at the end of the page URL
 page_slug<-"modelled-estimates-of-recent-births"
