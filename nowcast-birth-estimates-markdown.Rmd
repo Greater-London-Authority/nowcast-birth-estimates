@@ -1,0 +1,219 @@
+---
+title: "Modelled estimates of recent births"
+output:
+  html_document: default
+always_allow_html: true
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Load required packages (Work out what to do about package dependencies)
+# install.packages(c("magick", "sf", "sp"))
+
+library(tidyverse)
+library(gglaplot)
+#library(scales)
+#library(readxl)
+#library(knitr)
+library(sf)
+#library(sp)
+#library(magick)
+library(kableExtra)
+
+# Import borough boundaries
+borough_boundaries<-
+  st_read("2011_census_london_boroughs/London_Borough_Excluding_MHW.shp")
+
+# Disable scientific notation
+options(scipen=999)
+
+# Import data and wrangle column names
+actual_and_predicted_births <- readRDS("outputs/actual_and_predicted_births.rds")
+birth_gp_ratios <- readRDS("outputs/birth_gp_ratios.rds")
+
+ldn_actual_and_predicted_births <- filter(actual_and_predicted_births, grepl("^E09",gss_code),
+                                             type %in% c("actual", "predicted")) %>%
+  group_by(gss_code, gss_name, type) %>%
+  filter(date == max(date), sex == "persons") %>%
+  ungroup
+# TODO add check to make sure there is only 1 date for each type and that the dates are sensible
+
+# TODO I imagine the next step should be possible in pivot_wider without separating the dataframes but haven't worked out how to do that. 
+
+ldn_actual_births <- ldn_actual_and_predicted_births %>%
+  filter(type == "actual") %>%
+  select(-c("date", "interval_lower", "interval_upper")) %>%
+  pivot_wider(names_from = type, values_from = annual_births) 
+
+ldn_predicted_births <- ldn_actual_and_predicted_births %>%
+  filter(type == "predicted") %>%
+  select(-date) %>%
+  pivot_wider(names_from = type, values_from = annual_births) 
+
+# TODO: check actual and predicted are fully matching for the full join below
+
+ldn_actual_and_predicted_births_wide <- full_join(ldn_actual_births, ldn_predicted_births,
+                                                  by = c("gss_code", "gss_name", "geography", "sex")) %>%
+  select(gss_code, gss_name, geography, sex, actual, predicted, interval_lower, interval_upper) %>%
+  mutate(diff_upper = interval_upper - predicted, diff_lower = predicted - interval_lower, diff_diff = diff_upper - diff_lower)
+
+# TODO: add check to make sure the upper and lower intervals are very close in size (e.g. max(abs(diff_diff)) < 1)
+
+ldn_actual_and_predicted_births_wide <- ldn_actual_and_predicted_births_wide %>%
+  mutate(predicted_plus_minus = (diff_upper + diff_lower)/2) %>%
+  select(-c("diff_upper", "diff_lower", "diff_diff")) %>%
+  mutate(change = predicted - actual, perc_change = 100*change/actual) 
+
+ldn_actual_and_predicted_births_map <- ldn_actual_and_predicted_births_wide %>%
+  left_join(borough_boundaries, by=c("gss_code"="GSS_CODE"))
+
+
+dates <- actual_and_predicted_births %>% select(date, type) %>% unique() 
+
+latest_dates <- dates %>%
+  group_by(type) %>% filter(date == max(date)) %>% ungroup() %>%
+  rename(latest_date = date)
+earliest_dates <- dates %>%
+  group_by(type) %>% filter(date == min(date)) %>% ungroup() %>%
+  rename(earliest_date = date)
+earliest_actual_date <- earliest_dates %>% filter(type == "actual") %>% pull(earliest_date)
+latest_actual_date <- latest_dates %>% filter(type == "actual") %>% pull(latest_date)
+earliest_predicted_date <- earliest_dates %>% filter(type == "predicted") %>% pull(earliest_date)
+latest_predicted_date <- latest_dates %>% filter(type == "predicted") %>% pull(latest_date)
+latest_interpolated_date <- latest_dates %>% filter(type == "interpolated") %>% pull(latest_date)
+
+```
+
+Modelled estimates of annual live births by year ending date.
+
+Official birth estimates from ONS are considered very accurate, but the lag between the end of the period covered and the publication of estimates is typically 9-12 months. To gain a more timely indication of birth trends, the GLA Demography team produces modelled estimates of annual births based on counts of infants registered with GP practices. Modelled birth estimates can be produced with the same frequency and latency that [NHS Digital](https://digital.nhs.uk/data-and-information/publications/statistical/patients-registered-at-a-gp-practice) publishes patient count data - currently this is monthly and with a lag of 1-2 weeks.
+
+The approach used to generate the modelled birth estimates was originally described in this [2016 technical note](https://data.london.gov.uk/dataset/estimating-births-using-gp-registration-data). The methodology relies on the correlation between the count of persons age 0 (i.e. yet to reach their first birthday) on the patient register and resident in an area with the number of births that have taken place in that area over the preceding year. 
+
+The data used to create these modelled birth estimates are:
+
+1. [Modelled estimates of patient counts by age, sex, and local authority of residence](https://data.london.gov.uk/dataset/patients-registered-at-a-gp-practice)
+2. [Official estimates of annual live births by local authority of residence](https://data.london.gov.uk/dataset/birth-estimates)
+
+A respository of the code used to generate the modelled birth estimates is [available on GitHub](https://github.com/Greater-London-Authority/nowcast-birth-estimates). The repository's ReadMe provides more information about the methodology used to produce the estimates as well as a summary analysis of their past accuracy.
+
+The outputs cover a range of geographies in England.
+
+![](outputs/plots/E12000007/E12000007_5yrs.png)
+Within London there is variation in how annual births are predicted to have changed since the latest official estimates. The map below shows the percentage change between the latest official births estimates (`r format(latest_actual_date, format="%d %b %Y")`) and the latest GLA modelled births estimate (`r format(latest_predicted_date, format="%d %b %Y")`) for London Boroughs.   
+
+```{r maps_change_in_births, fig.height = 6, fig.width = 10, echo=FALSE, include = FALSE}
+
+if (!exists("plots/maps")) {dir.create("plots/maps")}
+# remove all files currently in the maps folder
+file.remove(list.files("figures/maps", full.names=TRUE))
+
+perc_change_map <- ldn_actual_and_predicted_births_map %>%
+  filter(gss_code!="E09000001") %>%
+  ggplot(aes(geometry = geometry, fill = perc_change))+
+  ggla_sf(color = "white", size = 0.5)+
+  theme_gla(base_size = 11.5)+
+  scale_fill_gradient2() +
+  #scale_fill_gradient(labels=percent_format(),
+  #                    low="slategray1",
+  #                    high="royalblue4")+
+  theme(legend.position="right") +
+  labs(title=paste0("Predicted % change in annual live births between ", format(latest_actual_date, format="%d %b %Y"), " and ", format(latest_predicted_date, format="%d %b %Y"), "\n"),
+       caption = "\nChart: GLA City Intelligence\nSource: GLA modelled estimates based on ONS births estimates statistics and NHS Digital patient count data\nN.B. Data for City of London are not included")
+
+
+# abs_change_map <- ldn_actual_and_predicted_births_map %>%
+#   ggplot(aes(geometry = geometry, fill = change))+
+#   ggla_sf(color = "white", size = 0.5)+
+#   theme_gla(base_size = 11.5)+
+#   scale_fill_gradient2() +
+#   #scale_fill_gradient(labels=percent_format(),
+#   #                    low="slategray1",
+#   #                    high="royalblue4")+
+#   theme(legend.position="right") +
+#   labs(title=paste0("Predicted change in annual live births between ", format(latest_actual_date, format="%d %b %Y"), " and ", format(latest_predicted_date, format="%d %b %Y"), "\n"),
+#        caption = "\nChart: GLA City Intelligence\nSource: GLA modelled births based on ONS births estimates statistics and NHS Digital patient count data")
+
+
+
+ggsave("plots/maps/perc_change_map.png", perc_change_map, width=10, height=6, units="in", device = "png") 
+```
+
+
+
+```{r perc_change_map, fig.height = 6, fig.width = 10, echo=FALSE}
+perc_change_map
+```
+
+
+## File contents
+
+Files containing the outputs from this modelling process are available for download below.
+
+The downloads contain official ONS annual births estimates between `r format(earliest_actual_date, format="%d %b %Y")` and `r format(latest_actual_date, format="%d %b %Y")`, interpolated estimates at monthly intervals between official estimates, and predictions of annual births up to `r format(latest_predicted_date, format="%d %b %Y")`. Predicted data are given alongside the upper and lower bounds of the 95% prediction interval.
+
+The data are given for local authority districts, regions, country, and international territorial levels ITL2 in England.  
+
+These data are not currently split by sex.
+
+The following are example rows to show the format of the csv data file downloads. 
+
+```{r, echo=FALSE, message=FALSE, results="asis", warning=FALSE}
+
+southwark_eg_table <- filter(actual_and_predicted_births, gss_code == "E09000028")
+last_row <- southwark_eg_table  %>% filter(date == max(date))
+first_predicted_row <- southwark_eg_table %>% filter(date == earliest_predicted_date)
+latest_unpredicted_rows <- southwark_eg_table %>% filter(date %in% c(latest_interpolated_date, latest_actual_date))
+
+last_row[] <- lapply(last_row, as.character)
+first_predicted_row[] <- lapply(first_predicted_row, as.character)
+latest_unpredicted_rows[] <- lapply(latest_unpredicted_rows, as.character)
+
+dots <- last_row
+dots[1,] <- "..."
+
+output_table <- bind_rows(list(dots, latest_unpredicted_rows, first_predicted_row, dots, last_row))
+
+
+output_table %>% kable(caption = "actual_and_predicted_births.csv")  %>% 
+  kable_styling(font_size = 13)
+```
+
+
+```{r, echo=FALSE, message=FALSE, results="asis", warning=FALSE}
+
+southwark_ratio_eg_table <- filter(birth_gp_ratios, gss_code == "E09000028")
+last_ratio_row <- southwark_ratio_eg_table  %>% filter(date == max(date))
+first_ratio_predicted_row <- southwark_ratio_eg_table %>% filter(date == earliest_predicted_date)
+latest_ratio_unpredicted_rows <- southwark_ratio_eg_table %>% filter(date %in% c(latest_interpolated_date, latest_actual_date))
+
+data_rows <- list(latest_ratio_unpredicted_rows = latest_ratio_unpredicted_rows, first_ratio_predicted_row = first_ratio_predicted_row, last_ratio_row = last_ratio_row)
+data_rows <- lapply(data_rows,function(x) mutate(x, across(c(ratio, ratio_lower, ratio_upper), round, 3)))
+data_rows <- lapply(data_rows, function(x) mutate(x, across(names(x), as.character)))
+
+dots_ratio <- data_rows$last_ratio_row
+dots_ratio[1,] <- "..."
+
+output_ratio_table <- bind_rows(list(dots_ratio, data_rows$latest_ratio_unpredicted_rows, data_rows$first_ratio_predicted_row, dots_ratio, data_rows$last_ratio_row))
+
+
+output_ratio_table %>% kable(caption = "birth_gp_ratios.csv")  %>% 
+  kable_styling(font_size = 13)
+```
+
+The plots.zip download contains png files of plots showing the actual and predicted annual births for each geographic area in the same format as the actual and predicted annual live births plot for London above. There are 3 plots for each different area which give different starting dates for the official estimates backseries to span a total of either 5, 10 or 15 years.  
+
+
+
+
+
+$~$
+
+
+
+
+
+
+$~$

@@ -1,0 +1,362 @@
+﻿LAD23CD,LAD23NM,LAD23NMW,CTRY23CD,CTRY23NM,CTRY23NMW,ObjectId
+E06000001,Hartlepool,,E92000001,England,Lloegr,1
+E06000002,Middlesbrough,,E92000001,England,Lloegr,2
+E06000003,Redcar and Cleveland,,E92000001,England,Lloegr,3
+E06000004,Stockton-on-Tees,,E92000001,England,Lloegr,4
+E06000005,Darlington,,E92000001,England,Lloegr,5
+E06000006,Halton,,E92000001,England,Lloegr,6
+E06000007,Warrington,,E92000001,England,Lloegr,7
+E06000008,Blackburn with Darwen,,E92000001,England,Lloegr,8
+E06000009,Blackpool,,E92000001,England,Lloegr,9
+E06000010,"Kingston upon Hull, City of",,E92000001,England,Lloegr,10
+E06000011,East Riding of Yorkshire,,E92000001,England,Lloegr,11
+E06000012,North East Lincolnshire,,E92000001,England,Lloegr,12
+E06000013,North Lincolnshire,,E92000001,England,Lloegr,13
+E06000014,York,,E92000001,England,Lloegr,14
+E06000015,Derby,,E92000001,England,Lloegr,15
+E06000016,Leicester,,E92000001,England,Lloegr,16
+E06000017,Rutland,,E92000001,England,Lloegr,17
+E06000018,Nottingham,,E92000001,England,Lloegr,18
+E06000019,"Herefordshire, County of",,E92000001,England,Lloegr,19
+E06000020,Telford and Wrekin,,E92000001,England,Lloegr,20
+E06000021,Stoke-on-Trent,,E92000001,England,Lloegr,21
+E06000022,Bath and North East Somerset,,E92000001,England,Lloegr,22
+E06000023,"Bristol, City of",,E92000001,England,Lloegr,23
+E06000024,North Somerset,,E92000001,England,Lloegr,24
+E06000025,South Gloucestershire,,E92000001,England,Lloegr,25
+E06000026,Plymouth,,E92000001,England,Lloegr,26
+E06000027,Torbay,,E92000001,England,Lloegr,27
+E06000030,Swindon,,E92000001,England,Lloegr,28
+E06000031,Peterborough,,E92000001,England,Lloegr,29
+E06000032,Luton,,E92000001,England,Lloegr,30
+E06000033,Southend-on-Sea,,E92000001,England,Lloegr,31
+E06000034,Thurrock,,E92000001,England,Lloegr,32
+E06000035,Medway,,E92000001,England,Lloegr,33
+E06000036,Bracknell Forest,,E92000001,England,Lloegr,34
+E06000037,West Berkshire,,E92000001,England,Lloegr,35
+E06000038,Reading,,E92000001,England,Lloegr,36
+E06000039,Slough,,E92000001,England,Lloegr,37
+E06000040,Windsor and Maidenhead,,E92000001,England,Lloegr,38
+E06000041,Wokingham,,E92000001,England,Lloegr,39
+E06000042,Milton Keynes,,E92000001,England,Lloegr,40
+E06000043,Brighton and Hove,,E92000001,England,Lloegr,41
+E06000044,Portsmouth,,E92000001,England,Lloegr,42
+E06000045,Southampton,,E92000001,England,Lloegr,43
+E06000046,Isle of Wight,,E92000001,England,Lloegr,44
+E06000047,County Durham,,E92000001,England,Lloegr,45
+E06000049,Cheshire East,,E92000001,England,Lloegr,46
+E06000050,Cheshire West and Chester,,E92000001,England,Lloegr,47
+E06000051,Shropshire,,E92000001,England,Lloegr,48
+E06000052,Cornwall,,E92000001,England,Lloegr,49
+E06000053,Isles of Scilly,,E92000001,England,Lloegr,50
+E06000054,Wiltshire,,E92000001,England,Lloegr,51
+E06000055,Bedford,,E92000001,England,Lloegr,52
+E07000081,Gloucester,,E92000001,England,Lloegr,53
+E07000082,Stroud,,E92000001,England,Lloegr,54
+E07000083,Tewkesbury,,E92000001,England,Lloegr,55
+E07000084,Basingstoke and Deane,,E92000001,England,Lloegr,56
+E07000085,East Hampshire,,E92000001,England,Lloegr,57
+E07000086,Eastleigh,,E92000001,England,Lloegr,58
+E07000087,Fareham,,E92000001,England,Lloegr,59
+E07000088,Gosport,,E92000001,England,Lloegr,60
+E07000089,Hart,,E92000001,England,Lloegr,61
+E07000090,Havant,,E92000001,England,Lloegr,62
+E07000091,New Forest,,E92000001,England,Lloegr,63
+E07000092,Rushmoor,,E92000001,England,Lloegr,64
+E07000093,Test Valley,,E92000001,England,Lloegr,65
+E07000094,Winchester,,E92000001,England,Lloegr,66
+E07000095,Broxbourne,,E92000001,England,Lloegr,67
+E07000096,Dacorum,,E92000001,England,Lloegr,68
+E07000098,Hertsmere,,E92000001,England,Lloegr,69
+E07000099,North Hertfordshire,,E92000001,England,Lloegr,70
+E07000102,Three Rivers,,E92000001,England,Lloegr,71
+E07000103,Watford,,E92000001,England,Lloegr,72
+E07000105,Ashford,,E92000001,England,Lloegr,73
+E07000106,Canterbury,,E92000001,England,Lloegr,74
+E07000107,Dartford,,E92000001,England,Lloegr,75
+E07000108,Dover,,E92000001,England,Lloegr,76
+E07000109,Gravesham,,E92000001,England,Lloegr,77
+E07000110,Maidstone,,E92000001,England,Lloegr,78
+E07000111,Sevenoaks,,E92000001,England,Lloegr,79
+E07000112,Folkestone and Hythe,,E92000001,England,Lloegr,80
+E07000113,Swale,,E92000001,England,Lloegr,81
+E07000114,Thanet,,E92000001,England,Lloegr,82
+E07000115,Tonbridge and Malling,,E92000001,England,Lloegr,83
+E07000116,Tunbridge Wells,,E92000001,England,Lloegr,84
+E07000117,Burnley,,E92000001,England,Lloegr,85
+E07000118,Chorley,,E92000001,England,Lloegr,86
+E07000119,Fylde,,E92000001,England,Lloegr,87
+E07000120,Hyndburn,,E92000001,England,Lloegr,88
+E07000121,Lancaster,,E92000001,England,Lloegr,89
+E07000122,Pendle,,E92000001,England,Lloegr,90
+E07000123,Preston,,E92000001,England,Lloegr,91
+E07000124,Ribble Valley,,E92000001,England,Lloegr,92
+E07000125,Rossendale,,E92000001,England,Lloegr,93
+E07000126,South Ribble,,E92000001,England,Lloegr,94
+E07000127,West Lancashire,,E92000001,England,Lloegr,95
+E07000128,Wyre,,E92000001,England,Lloegr,96
+E07000129,Blaby,,E92000001,England,Lloegr,97
+E07000130,Charnwood,,E92000001,England,Lloegr,98
+E07000131,Harborough,,E92000001,England,Lloegr,99
+E07000132,Hinckley and Bosworth,,E92000001,England,Lloegr,100
+E07000133,Melton,,E92000001,England,Lloegr,101
+E07000134,North West Leicestershire,,E92000001,England,Lloegr,102
+E07000135,Oadby and Wigston,,E92000001,England,Lloegr,103
+E07000136,Boston,,E92000001,England,Lloegr,104
+E06000056,Central Bedfordshire,,E92000001,England,Lloegr,105
+E06000057,Northumberland,,E92000001,England,Lloegr,106
+E06000058,"Bournemouth, Christchurch and Poole",,E92000001,England,Lloegr,107
+E06000059,Dorset,,E92000001,England,Lloegr,108
+E06000060,Buckinghamshire,,E92000001,England,Lloegr,109
+E06000061,North Northamptonshire,,E92000001,England,Lloegr,110
+E06000062,West Northamptonshire,,E92000001,England,Lloegr,111
+E06000063,Cumberland,,E92000001,England,Lloegr,112
+E06000064,Westmorland and Furness,,E92000001,England,Lloegr,113
+E06000065,North Yorkshire,,E92000001,England,Lloegr,114
+E06000066,Somerset,,E92000001,England,Lloegr,115
+E07000008,Cambridge,,E92000001,England,Lloegr,116
+E07000009,East Cambridgeshire,,E92000001,England,Lloegr,117
+E07000010,Fenland,,E92000001,England,Lloegr,118
+E07000011,Huntingdonshire,,E92000001,England,Lloegr,119
+E07000012,South Cambridgeshire,,E92000001,England,Lloegr,120
+E07000032,Amber Valley,,E92000001,England,Lloegr,121
+E07000033,Bolsover,,E92000001,England,Lloegr,122
+E07000034,Chesterfield,,E92000001,England,Lloegr,123
+E07000035,Derbyshire Dales,,E92000001,England,Lloegr,124
+E07000036,Erewash,,E92000001,England,Lloegr,125
+E07000037,High Peak,,E92000001,England,Lloegr,126
+E07000038,North East Derbyshire,,E92000001,England,Lloegr,127
+E07000039,South Derbyshire,,E92000001,England,Lloegr,128
+E07000040,East Devon,,E92000001,England,Lloegr,129
+E07000041,Exeter,,E92000001,England,Lloegr,130
+E07000042,Mid Devon,,E92000001,England,Lloegr,131
+E07000043,North Devon,,E92000001,England,Lloegr,132
+E07000044,South Hams,,E92000001,England,Lloegr,133
+E07000045,Teignbridge,,E92000001,England,Lloegr,134
+E07000046,Torridge,,E92000001,England,Lloegr,135
+E07000047,West Devon,,E92000001,England,Lloegr,136
+E07000061,Eastbourne,,E92000001,England,Lloegr,137
+E07000062,Hastings,,E92000001,England,Lloegr,138
+E07000063,Lewes,,E92000001,England,Lloegr,139
+E07000064,Rother,,E92000001,England,Lloegr,140
+E07000223,Adur,,E92000001,England,Lloegr,141
+E07000065,Wealden,,E92000001,England,Lloegr,142
+E07000066,Basildon,,E92000001,England,Lloegr,143
+E07000067,Braintree,,E92000001,England,Lloegr,144
+E07000068,Brentwood,,E92000001,England,Lloegr,145
+E07000069,Castle Point,,E92000001,England,Lloegr,146
+E07000070,Chelmsford,,E92000001,England,Lloegr,147
+E07000071,Colchester,,E92000001,England,Lloegr,148
+E07000072,Epping Forest,,E92000001,England,Lloegr,149
+E07000073,Harlow,,E92000001,England,Lloegr,150
+E07000074,Maldon,,E92000001,England,Lloegr,151
+E07000075,Rochford,,E92000001,England,Lloegr,152
+E07000076,Tendring,,E92000001,England,Lloegr,153
+E07000077,Uttlesford,,E92000001,England,Lloegr,154
+E07000078,Cheltenham,,E92000001,England,Lloegr,155
+E07000079,Cotswold,,E92000001,England,Lloegr,156
+E07000080,Forest of Dean,,E92000001,England,Lloegr,157
+E07000224,Arun,,E92000001,England,Lloegr,158
+E07000225,Chichester,,E92000001,England,Lloegr,159
+E07000226,Crawley,,E92000001,England,Lloegr,160
+E07000227,Horsham,,E92000001,England,Lloegr,161
+E07000228,Mid Sussex,,E92000001,England,Lloegr,162
+E07000229,Worthing,,E92000001,England,Lloegr,163
+E07000234,Bromsgrove,,E92000001,England,Lloegr,164
+E07000235,Malvern Hills,,E92000001,England,Lloegr,165
+E07000236,Redditch,,E92000001,England,Lloegr,166
+E07000237,Worcester,,E92000001,England,Lloegr,167
+E07000238,Wychavon,,E92000001,England,Lloegr,168
+E07000239,Wyre Forest,,E92000001,England,Lloegr,169
+E07000240,St Albans,,E92000001,England,Lloegr,170
+E07000241,Welwyn Hatfield,,E92000001,England,Lloegr,171
+E07000242,East Hertfordshire,,E92000001,England,Lloegr,172
+E07000243,Stevenage,,E92000001,England,Lloegr,173
+E07000244,East Suffolk,,E92000001,England,Lloegr,174
+E07000245,West Suffolk,,E92000001,England,Lloegr,175
+E08000001,Bolton,,E92000001,England,Lloegr,176
+E08000002,Bury,,E92000001,England,Lloegr,177
+E08000003,Manchester,,E92000001,England,Lloegr,178
+E08000004,Oldham,,E92000001,England,Lloegr,179
+E08000005,Rochdale,,E92000001,England,Lloegr,180
+E08000006,Salford,,E92000001,England,Lloegr,181
+E08000007,Stockport,,E92000001,England,Lloegr,182
+E08000008,Tameside,,E92000001,England,Lloegr,183
+E08000009,Trafford,,E92000001,England,Lloegr,184
+E08000010,Wigan,,E92000001,England,Lloegr,185
+E08000011,Knowsley,,E92000001,England,Lloegr,186
+E08000012,Liverpool,,E92000001,England,Lloegr,187
+E08000013,St. Helens,,E92000001,England,Lloegr,188
+E08000014,Sefton,,E92000001,England,Lloegr,189
+E08000015,Wirral,,E92000001,England,Lloegr,190
+E08000016,Barnsley,,E92000001,England,Lloegr,191
+E08000017,Doncaster,,E92000001,England,Lloegr,192
+E08000018,Rotherham,,E92000001,England,Lloegr,193
+E08000019,Sheffield,,E92000001,England,Lloegr,194
+E08000021,Newcastle upon Tyne,,E92000001,England,Lloegr,195
+E08000022,North Tyneside,,E92000001,England,Lloegr,196
+E08000023,South Tyneside,,E92000001,England,Lloegr,197
+E08000024,Sunderland,,E92000001,England,Lloegr,198
+E08000025,Birmingham,,E92000001,England,Lloegr,199
+E08000026,Coventry,,E92000001,England,Lloegr,200
+E08000027,Dudley,,E92000001,England,Lloegr,201
+E08000028,Sandwell,,E92000001,England,Lloegr,202
+E08000029,Solihull,,E92000001,England,Lloegr,203
+E08000030,Walsall,,E92000001,England,Lloegr,204
+E08000031,Wolverhampton,,E92000001,England,Lloegr,205
+E08000032,Bradford,,E92000001,England,Lloegr,206
+E08000033,Calderdale,,E92000001,England,Lloegr,207
+E08000034,Kirklees,,E92000001,England,Lloegr,208
+E08000035,Leeds,,E92000001,England,Lloegr,209
+E08000036,Wakefield,,E92000001,England,Lloegr,210
+E08000037,Gateshead,,E92000001,England,Lloegr,211
+E09000001,City of London,,E92000001,England,Lloegr,212
+E09000002,Barking and Dagenham,,E92000001,England,Lloegr,213
+E09000003,Barnet,,E92000001,England,Lloegr,214
+E09000004,Bexley,,E92000001,England,Lloegr,215
+E09000005,Brent,,E92000001,England,Lloegr,216
+E09000006,Bromley,,E92000001,England,Lloegr,217
+E09000007,Camden,,E92000001,England,Lloegr,218
+E09000008,Croydon,,E92000001,England,Lloegr,219
+E09000009,Ealing,,E92000001,England,Lloegr,220
+E09000010,Enfield,,E92000001,England,Lloegr,221
+E09000011,Greenwich,,E92000001,England,Lloegr,222
+E09000012,Hackney,,E92000001,England,Lloegr,223
+E09000013,Hammersmith and Fulham,,E92000001,England,Lloegr,224
+E09000014,Haringey,,E92000001,England,Lloegr,225
+E09000015,Harrow,,E92000001,England,Lloegr,226
+E09000016,Havering,,E92000001,England,Lloegr,227
+E09000017,Hillingdon,,E92000001,England,Lloegr,228
+E09000018,Hounslow,,E92000001,England,Lloegr,229
+E09000019,Islington,,E92000001,England,Lloegr,230
+E09000020,Kensington and Chelsea,,E92000001,England,Lloegr,231
+E09000021,Kingston upon Thames,,E92000001,England,Lloegr,232
+E09000022,Lambeth,,E92000001,England,Lloegr,233
+E09000023,Lewisham,,E92000001,England,Lloegr,234
+E09000024,Merton,,E92000001,England,Lloegr,235
+E09000025,Newham,,E92000001,England,Lloegr,236
+E09000026,Redbridge,,E92000001,England,Lloegr,237
+E09000027,Richmond upon Thames,,E92000001,England,Lloegr,238
+E09000028,Southwark,,E92000001,England,Lloegr,239
+E09000029,Sutton,,E92000001,England,Lloegr,240
+E09000030,Tower Hamlets,,E92000001,England,Lloegr,241
+E09000031,Waltham Forest,,E92000001,England,Lloegr,242
+E09000032,Wandsworth,,E92000001,England,Lloegr,243
+E09000033,Westminster,,E92000001,England,Lloegr,244
+N09000001,Antrim and Newtownabbey,,N92000002,Northern Ireland,Gogledd Iwerddon,245
+N09000002,"Armagh City, Banbridge and Craigavon",,N92000002,Northern Ireland,Gogledd Iwerddon,246
+N09000003,Belfast,,N92000002,Northern Ireland,Gogledd Iwerddon,247
+N09000004,Causeway Coast and Glens,,N92000002,Northern Ireland,Gogledd Iwerddon,248
+N09000005,Derry City and Strabane,,N92000002,Northern Ireland,Gogledd Iwerddon,249
+N09000006,Fermanagh and Omagh,,N92000002,Northern Ireland,Gogledd Iwerddon,250
+N09000007,Lisburn and Castlereagh,,N92000002,Northern Ireland,Gogledd Iwerddon,251
+N09000008,Mid and East Antrim,,N92000002,Northern Ireland,Gogledd Iwerddon,252
+N09000009,Mid Ulster,,N92000002,Northern Ireland,Gogledd Iwerddon,253
+N09000010,"Newry, Mourne and Down",,N92000002,Northern Ireland,Gogledd Iwerddon,254
+N09000011,Ards and North Down,,N92000002,Northern Ireland,Gogledd Iwerddon,255
+S12000005,Clackmannanshire,,S92000003,Scotland,Yr Alban,256
+S12000006,Dumfries and Galloway,,S92000003,Scotland,Yr Alban,257
+S12000008,East Ayrshire,,S92000003,Scotland,Yr Alban,258
+S12000010,East Lothian,,S92000003,Scotland,Yr Alban,259
+S12000011,East Renfrewshire,,S92000003,Scotland,Yr Alban,260
+S12000013,Na h-Eileanan Siar,,S92000003,Scotland,Yr Alban,261
+S12000014,Falkirk,,S92000003,Scotland,Yr Alban,262
+S12000017,Highland,,S92000003,Scotland,Yr Alban,263
+S12000018,Inverclyde,,S92000003,Scotland,Yr Alban,264
+S12000019,Midlothian,,S92000003,Scotland,Yr Alban,265
+S12000020,Moray,,S92000003,Scotland,Yr Alban,266
+S12000021,North Ayrshire,,S92000003,Scotland,Yr Alban,267
+S12000023,Orkney Islands,,S92000003,Scotland,Yr Alban,268
+S12000026,Scottish Borders,,S92000003,Scotland,Yr Alban,269
+S12000027,Shetland Islands,,S92000003,Scotland,Yr Alban,270
+S12000028,South Ayrshire,,S92000003,Scotland,Yr Alban,271
+S12000029,South Lanarkshire,,S92000003,Scotland,Yr Alban,272
+S12000030,Stirling,,S92000003,Scotland,Yr Alban,273
+S12000033,Aberdeen City,,S92000003,Scotland,Yr Alban,274
+S12000034,Aberdeenshire,,S92000003,Scotland,Yr Alban,275
+S12000035,Argyll and Bute,,S92000003,Scotland,Yr Alban,276
+S12000036,City of Edinburgh,,S92000003,Scotland,Yr Alban,277
+S12000038,Renfrewshire,,S92000003,Scotland,Yr Alban,278
+S12000039,West Dunbartonshire,,S92000003,Scotland,Yr Alban,279
+S12000040,West Lothian,,S92000003,Scotland,Yr Alban,280
+S12000041,Angus,,S92000003,Scotland,Yr Alban,281
+S12000042,Dundee City,,S92000003,Scotland,Yr Alban,282
+S12000045,East Dunbartonshire,,S92000003,Scotland,Yr Alban,283
+S12000047,Fife,,S92000003,Scotland,Yr Alban,284
+S12000048,Perth and Kinross,,S92000003,Scotland,Yr Alban,285
+S12000049,Glasgow City,,S92000003,Scotland,Yr Alban,286
+S12000050,North Lanarkshire,,S92000003,Scotland,Yr Alban,287
+W06000001,Isle of Anglesey,Ynys Môn,W92000004,Wales,Cymru,288
+W06000002,Gwynedd,Gwynedd,W92000004,Wales,Cymru,289
+W06000003,Conwy,Conwy,W92000004,Wales,Cymru,290
+W06000004,Denbighshire,Sir Ddinbych,W92000004,Wales,Cymru,291
+W06000005,Flintshire,Sir y Fflint,W92000004,Wales,Cymru,292
+W06000006,Wrexham,Wrecsam,W92000004,Wales,Cymru,293
+W06000008,Ceredigion,Ceredigion,W92000004,Wales,Cymru,294
+W06000009,Pembrokeshire,Sir Benfro,W92000004,Wales,Cymru,295
+W06000010,Carmarthenshire,Sir Gaerfyrddin,W92000004,Wales,Cymru,296
+W06000011,Swansea,Abertawe,W92000004,Wales,Cymru,297
+W06000012,Neath Port Talbot,Castell-nedd Port Talbot,W92000004,Wales,Cymru,298
+W06000013,Bridgend,Pen-y-bont ar Ogwr,W92000004,Wales,Cymru,299
+W06000014,Vale of Glamorgan,Bro Morgannwg,W92000004,Wales,Cymru,300
+W06000015,Cardiff,Caerdydd,W92000004,Wales,Cymru,301
+W06000016,Rhondda Cynon Taf,Rhondda Cynon Taf,W92000004,Wales,Cymru,302
+W06000018,Caerphilly,Caerffili,W92000004,Wales,Cymru,303
+W06000019,Blaenau Gwent,Blaenau Gwent,W92000004,Wales,Cymru,304
+W06000020,Torfaen,Torfaen,W92000004,Wales,Cymru,305
+W06000021,Monmouthshire,Sir Fynwy,W92000004,Wales,Cymru,306
+W06000022,Newport,Casnewydd,W92000004,Wales,Cymru,307
+W06000023,Powys,Powys,W92000004,Wales,Cymru,308
+W06000024,Merthyr Tydfil,Merthyr Tudful,W92000004,Wales,Cymru,309
+E07000137,East Lindsey,,E92000001,England,Lloegr,310
+E07000138,Lincoln,,E92000001,England,Lloegr,311
+E07000139,North Kesteven,,E92000001,England,Lloegr,312
+E07000140,South Holland,,E92000001,England,Lloegr,313
+E07000141,South Kesteven,,E92000001,England,Lloegr,314
+E07000142,West Lindsey,,E92000001,England,Lloegr,315
+E07000143,Breckland,,E92000001,England,Lloegr,316
+E07000144,Broadland,,E92000001,England,Lloegr,317
+E07000145,Great Yarmouth,,E92000001,England,Lloegr,318
+E07000146,King's Lynn and West Norfolk,,E92000001,England,Lloegr,319
+E07000147,North Norfolk,,E92000001,England,Lloegr,320
+E07000148,Norwich,,E92000001,England,Lloegr,321
+E07000149,South Norfolk,,E92000001,England,Lloegr,322
+E07000170,Ashfield,,E92000001,England,Lloegr,323
+E07000171,Bassetlaw,,E92000001,England,Lloegr,324
+E07000172,Broxtowe,,E92000001,England,Lloegr,325
+E07000173,Gedling,,E92000001,England,Lloegr,326
+E07000174,Mansfield,,E92000001,England,Lloegr,327
+E07000175,Newark and Sherwood,,E92000001,England,Lloegr,328
+E07000176,Rushcliffe,,E92000001,England,Lloegr,329
+E07000177,Cherwell,,E92000001,England,Lloegr,330
+E07000178,Oxford,,E92000001,England,Lloegr,331
+E07000179,South Oxfordshire,,E92000001,England,Lloegr,332
+E07000180,Vale of White Horse,,E92000001,England,Lloegr,333
+E07000181,West Oxfordshire,,E92000001,England,Lloegr,334
+E07000192,Cannock Chase,,E92000001,England,Lloegr,335
+E07000193,East Staffordshire,,E92000001,England,Lloegr,336
+E07000194,Lichfield,,E92000001,England,Lloegr,337
+E07000195,Newcastle-under-Lyme,,E92000001,England,Lloegr,338
+E07000196,South Staffordshire,,E92000001,England,Lloegr,339
+E07000197,Stafford,,E92000001,England,Lloegr,340
+E07000198,Staffordshire Moorlands,,E92000001,England,Lloegr,341
+E07000199,Tamworth,,E92000001,England,Lloegr,342
+E07000200,Babergh,,E92000001,England,Lloegr,343
+E07000202,Ipswich,,E92000001,England,Lloegr,344
+E07000203,Mid Suffolk,,E92000001,England,Lloegr,345
+E07000207,Elmbridge,,E92000001,England,Lloegr,346
+E07000208,Epsom and Ewell,,E92000001,England,Lloegr,347
+E07000209,Guildford,,E92000001,England,Lloegr,348
+E07000210,Mole Valley,,E92000001,England,Lloegr,349
+E07000211,Reigate and Banstead,,E92000001,England,Lloegr,350
+E07000212,Runnymede,,E92000001,England,Lloegr,351
+E07000213,Spelthorne,,E92000001,England,Lloegr,352
+E07000214,Surrey Heath,,E92000001,England,Lloegr,353
+E07000215,Tandridge,,E92000001,England,Lloegr,354
+E07000216,Waverley,,E92000001,England,Lloegr,355
+E07000217,Woking,,E92000001,England,Lloegr,356
+E07000218,North Warwickshire,,E92000001,England,Lloegr,357
+E07000219,Nuneaton and Bedworth,,E92000001,England,Lloegr,358
+E07000220,Rugby,,E92000001,England,Lloegr,359
+E07000221,Stratford-on-Avon,,E92000001,England,Lloegr,360
+E07000222,Warwick,,E92000001,England,Lloegr,361
