@@ -4,6 +4,7 @@
 # nowcast birth estimates
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
 This repository contains code for producing monthly modelled estimates
@@ -93,13 +94,13 @@ register counts of persons age 0 (i.e. yet to reach their first
 birthday) resident in an area with the number of births that have taken
 place in that area over the preceding year.
 
-<img src="man/figures/README-births & gp counts-1.png" width="100%" />
+<img src="man/figures/README-births & gp counts-1.png" alt="" width="100%" />
 
 The correlation between births and patient counts tends to be greater at
 larger geographic areas, such as regions and subregions, than it is for
 individual local authorities.
 
-<img src="man/figures/README-correlation_coefficients-1.png" width="100%" /><img src="man/figures/README-correlation_coefficients-2.png" width="100%" />
+<img src="man/figures/README-correlation_coefficients-1.png" alt="" width="100%" /><img src="man/figures/README-correlation_coefficients-2.png" alt="" width="100%" />
 
 Ratios of births to patient register counts vary over time. The reasons
 for changes in a given area might include:
@@ -114,7 +115,7 @@ for changes in a given area might include:
 - A change in the average time taken for changes in address to be
   reflected in the patient register
 
-<img src="man/figures/README-birth to gp ratio plots-1.png" width="100%" />
+<img src="man/figures/README-birth to gp ratio plots-1.png" alt="" width="100%" />
 
 Recent ratios are forecast from the time series of available past data.
 In the current implementation a simple exponential smoothing method from
@@ -135,12 +136,12 @@ frequency of the patient register data. This allows:
   mid-year and calendar year releases (these estimates are labelled as
   ‘interpolated’ in the output files)
 
-<img src="man/figures/README-plot actual and projected ratios-1.png" width="100%" />
+<img src="man/figures/README-plot actual and projected ratios-1.png" alt="" width="100%" />
 
 Predicted recent births for each area are calculated as the product of
 recent patient register counts and forecast ratios.
 
-<img src="man/figures/README-actual and predicted birth plot-1.png" width="100%" />
+<img src="man/figures/README-actual and predicted birth plot-1.png" alt="" width="100%" />
 
 # Potential improvements
 
@@ -167,7 +168,7 @@ Including monthly actual data would:
 A given set of birth predictions can be compared with subsequent actuals
 once they become available.
 
-<img src="man/figures/README-compare actual predicted births plot-1.png" width="100%" />
+<img src="man/figures/README-compare actual predicted births plot-1.png" alt="" width="100%" />
 
 To assess the overall accuracy of the predictions, we can produce and
 analyse multiple sets of predictions based on the data available at
@@ -195,9 +196,9 @@ than naive prediction. In contrast to the modelled data, the accuracy of
 the naive predictions showed much less variation by geography, but
 rapidly declined as the forecast horizon increased.
 
-<img src="man/figures/README-mean errors by horizon-1.png" width="100%" /><img src="man/figures/README-mean errors by horizon-2.png" width="100%" />
+<img src="man/figures/README-mean errors by horizon-1.png" alt="" width="100%" />
 
-<img src="man/figures/README-accuracy boxplots-1.png" width="100%" /><img src="man/figures/README-accuracy boxplots-2.png" width="100%" /><img src="man/figures/README-accuracy boxplots-3.png" width="100%" /><img src="man/figures/README-accuracy boxplots-4.png" width="100%" />
+<img src="man/figures/README-accuracy boxplots-1.png" alt="" width="100%" /><img src="man/figures/README-accuracy boxplots-2.png" alt="" width="100%" /><img src="man/figures/README-accuracy boxplots-3.png" alt="" width="100%" /><img src="man/figures/README-accuracy boxplots-4.png" alt="" width="100%" />
 
 ## Accuracy over time
 
@@ -206,7 +207,7 @@ and geography have remained relatively consistent (within ~0.5% MAPE)
 over successive sets of predictions. Accuracy of the naive predictions
 varied by a much greater degree over time.
 
-<img src="man/figures/README-accuracy over time-1.png" width="100%" /><img src="man/figures/README-accuracy over time-2.png" width="100%" />
+<img src="man/figures/README-accuracy over time-1.png" alt="" width="100%" />
 
 ## Reliability of stated prediction intervals
 
@@ -222,4 +223,4 @@ interval across all sets of predictions.
 This shows that the stated ranges underestimate the true 95% prediction
 intervals for all geographies.
 
-<img src="man/figures/README-proportion within prediction interval-1.png" width="100%" />
+<img src="man/figures/README-proportion within prediction interval-1.png" alt="" width="100%" />

@@ -26,7 +26,9 @@ library(dplyr)
 library(tidyr)
 library(stringr)
 library(ggplot2)
-library(gglaplot)
+library(gglaplot2)
+
+gla_mode("dark")
 
 source("R/functions/plot_predicted_births.R")
 source("R/functions/get_ts_ratios.R")
@@ -56,13 +58,14 @@ gp_ratios <- inner_join(births_actual, gp_0,
 
 dates_actual_births <- unique(births_actual$date)
 dates_actual_ratios <- unique(gp_ratios$date)
+dates_calendar_ratios <- dates_actual_ratios[month(dates_actual_ratios) == 1]
 
 ```
 
 ```{r set dates to use, include=FALSE}
 
 dt_earliest_to_use <- as.Date("2015-07-01")
-max_horizon <- 4
+max_horizon <- 3
 
 dt_start <- max(min(dates_actual_ratios), dt_earliest_to_use) + months(36)
 dt_end <- max(dates_actual_births) - months(max_horizon * 6)
@@ -129,7 +132,7 @@ The approach used to generate the modelled birth estimates was originally descri
 # City of London and Isles of Scilly are excluded as they are far smaller than other districts
 gss_exclude <- c("E09000001", "E06000053") 
 
-plt_gss <- c("E12000007", "E09000028", "TLH3", "E92000001", "E08000025", "E07000099")
+plt_gss <- c("E12000007", "E09000028", "TLI4", "E92000001")
 
 gp_births_ratios_plt <- inner_join(births_actual, gp_0,
                         by = c("gss_code", "gss_name", "geography", "date", "sex")) %>%
@@ -141,7 +144,7 @@ gp_births_ratios_plt %>%
   filter(gss_code %in% plt_gss) %>%
   filter(measure != "ratio") %>%
   ggplot(aes(x = date, y = value/1000, colour = measure)) +
-  theme_gla(free_y_facets = TRUE, gla_theme = "inverse") +
+  theme_gla(free_y_facets = TRUE) +
   geom_point() +
   ggla_line() +
   facet_wrap("gss_name", scales = "free_y") +
@@ -161,9 +164,13 @@ gp_births_correlation <- inner_join(births_actual, gp_0,
   mutate(geog_name = recode(geography,
                             "LAD23" = "Districts",
                             "LAD21" = "Districts",
-                            "RNG21" = "Regions",
-                            "RNG23" = "Regions",
-                            "ITL221" = "ITL2 Subregions")) %>%
+                            "RGN21" = "Regions",
+                            "RGN23" = "Regions",
+                            "ITL221" = "ITL2 Subregions",
+                            "CTRY" = "Country")) %>%
+  mutate(geog_name = factor(geog_name,
+                            levels = c("Districts", "ITL2 Subregions",
+                                       "Regions", "Country"))) |>
   arrange(sex, date) %>%
   group_by(gss_code, gss_name, geography, geog_name, sex) %>%
   summarise(correlation_coefficient = cor(annual_births, gp_count), .groups = "drop")
@@ -172,7 +179,7 @@ gp_births_correlation %>%
   filter(!gss_code %in% gss_exclude) %>%
   filter(grepl("LAD", geography)) %>%
   ggplot(aes(x = correlation_coefficient)) +
-  theme_gla(free_y_facets = TRUE, x_axis_title = TRUE, gla_theme = "inverse") +
+  theme_gla(free_y_facets = TRUE, x_axis_title = TRUE) +
   geom_histogram(bins = 60, fill = gla_pal()[5]) +
   scale_x_continuous(n.breaks = 10) +
   xlab("Correlation coefficient") +
@@ -184,7 +191,7 @@ gp_births_correlation %>%
   filter(!gss_code %in% gss_exclude) %>%
   filter(grepl("ITL|RGN", geography)) %>%
   ggplot(aes(x = correlation_coefficient, fill = geography)) +
-  theme_gla(free_y_facets = TRUE, x_axis_title = TRUE, gla_theme = "inverse") +
+  theme_gla(free_y_facets = TRUE, x_axis_title = TRUE) +
   geom_histogram(bins = 60) +
   facet_wrap("geog_name", scales = "free_y", ncol = 2) +
   scale_x_continuous(limits = c(0.9,NA)) +
@@ -206,10 +213,10 @@ gp_births_ratios_plt %>%
   filter(gss_code %in% plt_gss) %>%
   filter(measure == "ratio") %>%
   ggplot(aes(x = date, y = value, colour = gss_name)) +
-  theme_gla(free_y_facets = TRUE, gla_theme = "inverse") +
+  theme_gla(free_y_facets = TRUE) +
   geom_point() +
   ggla_line() +
-  scale_x_date(breaks = dates_actual_ratios, labels = label_date_short()) +
+  scale_x_date(breaks = dates_calendar_ratios, labels = label_date_short()) +
   labs(title = "Ratio of annual births to persons age 0 on patient register",
        caption = "Sources: ONS birth estimates; GLA modelling of NHS Digital patient data")
 
@@ -261,14 +268,26 @@ projected_ratios <- fit_model %>%
 gp_ratios %>%
   filter(gss_code %in% plt_gss) %>%
   filter(between(date, dt_earliest_to_use, dt_end)) %>%
-  ggplot(aes(x = date, y = ratio, colour = gss_name, fill = gss_name)) +
-  theme_gla(free_y_facets = TRUE, gla_theme = "inverse") +
+  ggplot(aes(x = date, y = ratio)) +
+  theme_gla(free_y_facets = TRUE) +
   geom_vline(xintercept = dt_end, linetype = "dashed", colour = "grey") +
-  geom_point(shape = 1) +
-  ggla_line(alpha = 0.3) +
+  geom_point(shape = 1,
+             alpha = 0.5,
+            colour = gla_pal()[[1]]
+            ) +
+  ggla_line(alpha = 0.8,
+            colour = gla_pal()[[1]]
+            ) +
   geom_ribbon(data = projected_ratios, 
-              aes(alpha = 0.2, ymin = ratio_lower, ymax = ratio_upper)) +
-  geom_line(data = projected_ratios, linewidth = 1) +
+              alpha = 0.3, 
+              fill = gla_pal()[[1]],
+              colour = gla_pal()[[1]],
+              aes(ymin = ratio_lower, 
+                  ymax = ratio_upper)
+              ) +
+  ggla_line(data = projected_ratios,
+            colour = gla_pal()[[1]],
+            alpha = 0.5) +
   scale_x_date(labels = label_date_short()) +
   theme(legend.position = "none") +
   labs(title = "Actual and forecast ratios",
@@ -298,14 +317,27 @@ births_actual %>%
   mutate(measure = "actual") %>%
   filter(gss_code %in% plt_gss) %>%
   filter(between(date, dt_earliest_to_use, dt_end)) %>%
-  ggplot(aes(x = date, y = value/1000, colour = gss_name, fill = gss_name)) +
-  theme_gla(free_y_facets = TRUE, gla_theme = "inverse") +
+  ggplot(aes(x = date, y = value/1000)) +
+  theme_gla(free_y_facets = TRUE) +
   geom_vline(xintercept = dt_end, linetype = "dashed", colour = "grey") +
-  geom_point(shape = 1, stroke = 0.75) +
-  ggla_line(alpha = 0.3) +
+  geom_point(shape = 1, 
+             stroke = 0.75, 
+             colour = gla_pal()[[1]], 
+             alpha = 0.5) +
+  ggla_line(alpha = 0.8, 
+            colour = gla_pal()[[1]]) +
   geom_ribbon(data = predicted_births, 
-              aes(alpha = 0.1, 
-                  ymin = interval_lower/1000, ymax = interval_upper/1000)) +
+              aes(
+                  ymin = interval_lower/1000, 
+                  ymax = interval_upper/1000
+                  ),
+              alpha = 0.3, 
+              fill = gla_pal()[[1]],
+              colour = gla_pal()[[1]],
+              ) +
+   ggla_line(data = predicted_births, 
+            alpha = 0.5,
+            colour = gla_pal()[[1]]) +
   scale_x_date(labels = label_date_short()) +
   theme(legend.position = "none") +
   labs(title = "Actual and predicted births",
@@ -338,14 +370,23 @@ births_actual %>%
   rename(value = annual_births) %>%
   mutate(measure = "actual") %>%
   filter(gss_code %in% plt_gss) %>%
-  filter(date >= dt_end - months(36)) %>%
-  ggplot(aes(x = date, y = value/1000, colour = gss_name, fill = gss_name)) +
-  theme_gla(free_y_facets = TRUE, gla_theme = "inverse") +
+  filter(date >= dt_end - months(18)) %>%
+  ggplot(aes(x = date, y = value/1000)) +
+  theme_gla(free_y_facets = TRUE) +
   geom_vline(xintercept = dt_end, linetype = "dashed", colour = "grey") +
   geom_ribbon(data = predicted_births, 
-              aes(alpha = 0.1, ymin = interval_lower/1000, ymax = interval_upper/1000)) +
-  geom_line(data = predicted_births, linetype = "dashed") +
-  geom_point(shape = 1, colour = "yellow", stroke = 1) +
+              alpha = 0.3, 
+              fill = gla_pal()[[1]],
+              colour = gla_pal()[[1]],
+              aes(ymin = interval_lower/1000, 
+                  ymax = interval_upper/1000)
+              ) +
+  ggla_line(data = predicted_births, 
+            alpha = 0.5,
+            colour = gla_pal()[[1]]) +
+  geom_point(shape = 1, 
+             colour = gla_pal()[[1]], 
+             stroke = 1) +
   scale_x_date(labels = label_date_short()) +
   theme(legend.position = "none") +
   labs(title = "Comparison of predicted births with subsequent actuals",
@@ -372,9 +413,23 @@ forecast_errors <- lapply(birth_comparisons, calculate_forecast_errors) %>%
   bind_rows() %>%
   mutate(model = recode(model, 
                         "ETS" = "Modelled",
-                        "naive" = "Naive"))
+                        "naive" = "Naive")) |>
+      mutate(geography = recode(geography,
+                            "LAD23" = "Districts",
+                            "LAD21" = "Districts",
+                            "RGN21" = "Regions",
+                            "RGN23" = "Regions",
+                            "ITL221" = "ITL2 Subregions",
+                            "CTRY" = "Country",
+                            "CTRY23" = "Country")) %>%
+    mutate(geography = factor(geography,
+                            levels = c("Districts", "ITL2 Subregions",
+                                       "Regions", "Country")))
 
 mean_errors <- calculate_mean_errors(forecast_errors)
+
+mean_errors_horizon <- calculate_mean_errors_by_horizon(forecast_errors)
+
 
 proportions_within_interval <- calculate_proportion_within_interval(birth_comparisons) 
 
@@ -388,26 +443,33 @@ Births modelled using patient count data proved to be far more accurate than nai
 
 ```{r mean errors by horizon, echo=FALSE, fig.show='hold'}
 
-plot_mean_errors <- function(sel_model, mean_errors) {
+plot_mean_errors <- function(mean_errors) {
   
   plt <- mean_errors %>%
-    filter(model == sel_model) %>%
-    ggplot(aes(x = horizon, y = MAPE, fill = geography, group = geography)) +
-    theme_gla(free_y_facets = TRUE, gla_theme = "inverse", 
-              x_axis_title = TRUE, y_axis_title = TRUE) +
-    ggla_horizbar(position = "dodge") +
-    scale_x_continuous(breaks = c(6, 12, 18, 24, 30, 36, 42)) +
+    #filter(model == sel_model) %>%
+    ggplot(aes(x = horizon, y = MAPE, colour = geography, fill = geography)) +
+    theme_gla(
+      #free_y_facets = TRUE, 
+      x_axis_title = TRUE, 
+      y_axis_title = TRUE
+    ) +
+    # geom_gla_col(position = "dodge") +
+    ggla_horizbar(position = "dodge",
+                  width = 5) +
+    scale_x_continuous(breaks = c(6, 12, 18)) +
     scale_y_continuous(n.breaks = 8) +
-    labs(title = "Prediction accuracy by forecast horizon",
-         subtitle = paste0(sel_model, " prediction")) +
+    labs(title = "Prediction accuracy by forecast method and horizon") +
     xlab("Horizon (months)") +
-    ylab("Mean Absolute Percentage Error")
+    ylab("Mean Absolute Percentage Error") +
+    facet_wrap("model")
   
   return(plt)
 }
 
-plot_mean_errors("Modelled", mean_errors)
-plot_mean_errors("Naive", mean_errors)
+plot_mean_errors(mean_errors_horizon)
+
+# plot_mean_errors("Modelled", mean_errors)
+# plot_mean_errors("Naive", mean_errors)
 
 ```
 
@@ -426,26 +488,26 @@ plot_err_boxplot <- function(sel_geog, forecast_errors,
   
   plt <- errors_df %>%
     ggplot(aes(x = horizon, y = perc_err/100, group = interaction(horizon, model), fill = model)) +
-    theme_gla(free_y_facets = TRUE, gla_theme = "inverse",
+    theme_gla(free_y_facets = TRUE,
               x_axis_title = TRUE, y_axis_title = TRUE) +
-    geom_hline(yintercept = 0, linetype = "dotted", colour = "white") +
+    geom_hline(yintercept = 0, linetype = "dotted", colour = "grey") +
     geom_boxplot(outlier.alpha = 0.3,
                  outlier.color = "grey",
-                 color = "white") +
+                 color = "grey") +
     scale_y_continuous(labels = scales::label_percent()) +
     scale_x_continuous(breaks = c(6, 12, 18, 24, 30, 36, 42)) +
     xlab("Horizon (months)") +
     ylab("Prediction error") +
-    labs(title = paste0("Prediction accuracy for ", sel_geog, " areas"),
+    labs(title = paste0("Prediction accuracy for ", sel_geog),
          subtitle = paste0("Number of areas: ", number_areas, "; Number prediction sets: ", number_runs)) 
 
   return(plt)
 }
 
-plot_err_boxplot("CTRY", forecast_errors)
-plot_err_boxplot("RGN", forecast_errors)
-plot_err_boxplot("ITL", forecast_errors)
-plot_err_boxplot("LAD", forecast_errors)
+plot_err_boxplot("Country", forecast_errors)
+plot_err_boxplot("Regions", forecast_errors)
+plot_err_boxplot("ITL2 Subregions", forecast_errors)
+plot_err_boxplot("Districts", forecast_errors)
 
 ```
 
@@ -455,28 +517,31 @@ The mean accuracy of the modelled births for a given forecast horizon and geogra
 
 ```{r accuracy over time, echo=FALSE}
 
-plot_accuracy_over_time <- function(sel_model, mean_errors) {
+plot_accuracy_over_time <- function(mean_errors) {
   
   plt <- mean_errors %>%
-    filter(model == sel_model) %>%
+    #filter(model == sel_model) %>%
     ggplot(aes(x = projection_date, y = MAPE/100, colour = geography, shape = geography)) +
-    theme_gla(free_y_facets = TRUE, gla_theme = "inverse",
+    theme_gla(free_y_facets = TRUE,
               x_axis_title = TRUE, y_axis_title = TRUE) +
     geom_point() +
+    geom_hline(yintercept = 0, linewidth = 0.5, colour = "grey") +
     ggla_line(alpha = 0.5) +
-    scale_x_date(breaks = dates_project_from, labels = label_date_short()) +
+    #scale_x_date(breaks = dates_project_from, labels = label_date_short()) +
+    scale_x_date(labels = label_date_short()) +
     scale_y_continuous(labels = scales::label_percent(), limits = c(0,NA)) +
-    labs(title = "Prediction accuracy over time",
-         subtitle = paste0(sel_model, " predictions")) +
+    labs(title = "Prediction accuracy over time by forecast method and horizon") +
     ylab("Mean absolute percentage error") +
     xlab("Date of last actual birth estimate") +
-    facet_wrap("horizon", ncol = 4)
+    facet_wrap(c("model", "horizon"), ncol = 3)
   
   return(plt)
 }
+plot_accuracy_over_time(mean_errors)
 
-plot_accuracy_over_time("Modelled", mean_errors)
-plot_accuracy_over_time("Naive", mean_errors)
+
+# plot_accuracy_over_time("Modelled", mean_errors)
+# plot_accuracy_over_time("Naive", mean_errors)
 
 ```
 
@@ -493,12 +558,12 @@ This shows that the stated ranges underestimate the true 95% prediction interval
 proportions_within_interval %>%
   mutate(geog_n = paste0(str_sub(geography, 1, -3), " (n=", number_areas, ")")) %>%
   ggplot(aes(x = geog_n, y = prop_within_interval, fill = reorder(geog_n, number_areas))) +
-  theme_gla(free_y_facets = TRUE, gla_theme = "inverse") +
-  
+  theme_gla(free_y_facets = TRUE) +
+  geom_hline(yintercept = 1, colour = "grey", linetype = "solid") +
+  geom_hline(yintercept = 0.95, colour = "grey", linetype = "dotted") +
   ggla_horizbar(position = "dodge", alpha = 0.9) + 
-  geom_text(aes(label = 100 * round(prop_within_interval, 3)), colour = "white", hjust = + 2) +
-  geom_hline(yintercept = 0.95, colour = "white", linetype = "dashed") +
-  scale_y_continuous(n.breaks = 9, labels = scales::label_percent()) +
+  geom_text(aes(label = 100 * round(prop_within_interval, 3)), hjust = + 2) +
+  scale_y_continuous(n.breaks = 5, labels = scales::label_percent()) +
     labs(title = "Proportion actual births within prediction interval",
        subtitle = "Stated prediction interval: 95%") 
 
