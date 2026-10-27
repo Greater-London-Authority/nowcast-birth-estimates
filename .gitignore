@@ -53,4 +53,3 @@ plots/*
 nowcast-birth-estimates-markdown.md
 *.html
 *.DS_Store
-*.png
